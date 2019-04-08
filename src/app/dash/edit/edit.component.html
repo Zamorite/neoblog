@@ -1,0 +1,75 @@
+<ng-container *ngIf="auth.user | async as user; else noAuth">
+    <!-- start page title section -->
+    <section class="bg-transparent">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-medium">
+                    <div class="display-table-cell vertical-align-middle text-center">
+                        <!-- start page title -->
+                        <h1 class="alt-font text-extra-dark-gray font-weight-500 no-margin">Edit Profile</h1>
+                        <!-- end page title -->
+                        <!-- start sub title -->
+                        <span class="display-block margin-10px-top alt-font">Provide necessary updates about yourself</span>
+                        <!-- end sub title -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end page title section -->
+
+
+    <section class="wow fadeIn animated" data-stellar-background-ratio="0.5" style="background-image:url('../../../assets/images/dark-bg.jpg')">
+        <div class=" container ">
+            <div class="row equalize sm-equalize-auto ">
+                <div class="col-md-5 col-sm-12 col-xs-12 text-center sm-margin-30px-bottom wow fadeInLeft ">
+                    <div class="display-table width-100 height-100 ">
+                        <div class="display-table-cell vertical-align-middle width-100 height-100 ">
+                            <img src="{{user.photoURL | avatar}}" [alt]="user.displayName " class="border-radius-6 width-100 ">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-12 col-xs-12 wow fadeInRight " data-wow-delay="0.2s ">
+                    <div class="display-table width-100 height-100 ">
+                        <div class="display-table-cell vertical-align-middle padding-twelve-lr sm-text-center sm-no-padding width-100 text-white">
+
+
+                            <form [formGroup]="profile" id="contact-form-2" (ngSubmit)="submit()">
+                                <div class="row">
+                                    <div class="col-md-8 wow fadeIn center-col text-center">
+                                        <div id="success-contact-form-2" class="no-margin-lr"></div>
+
+                                        <input formControlName="displayName" [(ngModel)]="usr.displayName" type="text" name="displayName" id="name" placeholder="Name*" class="input-border-bottom">
+
+                                        <small class="text-danger" *ngIf="this.profile.get('displayName').dirty && this.profile.get('displayName').hasError('required')">Your name please...</small>
+
+
+                                        <input formControlName="email" [(ngModel)]="usr.email" type="text" name="email" id="name" placeholder="Email*" class="input-border-bottom">
+
+                                        <small class="text-danger" *ngIf="this.profile.get('email').dirty && this.profile.get('email').hasError('required')">Your email please...</small>
+
+                                        <small class="text-danger" *ngIf="this.profile.get('email').dirty && this.profile.get('email').hasError('pattern')">That doesn't look like an email...</small>
+
+                                        <input formControlName="field" [(ngModel)]="usr.field" type="text" name="field" id="name" placeholder="Field*" class="input-border-bottom">
+
+                                        <small class="text-danger" *ngIf="this.profile.get('field').dirty && this.profile.get('field').hasError('required')">Science, art or commercial...</small>
+
+                                        <input formControlName="school" [(ngModel)]="usr.school" type="text" name="school" id="name" placeholder="School*" class="input-border-bottom">
+
+                                        <small class="text-danger" *ngIf="this.profile.get('school').dirty && this.profile.get('school').hasError('required')">School &#40;being&#41; attended...</small>
+
+                                        <button id="contact-us-button-2" type="submit" class="btn btn-small btn-deep-pink margin-30px-top xs-margin-three-top">Save Changes</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</ng-container>
+
+<ng-template #noAuth>
+
+</ng-template>

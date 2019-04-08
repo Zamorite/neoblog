@@ -1,0 +1,66 @@
+<ng-container *ngIf="auth.user | async as user; else noAuth">
+    <section class="wow fadeIn animated" data-stellar-background-ratio="0.5" style="background-image:url('../../../assets/images/dark-bg.jpg')">
+        <div class=" container ">
+            <div class="row text-white padding-five-bottom">
+                <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-medium">
+                    <div class="display-table-cell vertical-align-middle text-center">
+                        <!-- start page title -->
+                        <h1 class="alt-font font-weight-500 no-margin">Profile</h1>
+                        <!-- end page title -->
+                        <!-- start sub title -->
+                        <span class="display-block margin-10px-top alt-font">What we presently know about {{user.displayName}}</span>
+                        <!-- end sub title -->
+                    </div>
+                </div>
+            </div>
+            <div class="row equalize sm-equalize-auto ">
+                <div class="col-md-5 col-sm-12 col-xs-12 text-center sm-margin-30px-bottom wow fadeInLeft ">
+                    <div class="display-table width-100 height-100 ">
+                        <div class="display-table-cell vertical-align-middle width-100 height-100 ">
+                            <img src="{{user.photoURL | avatar}}" [alt]="user.displayName " class="border-radius-6 width-100 ">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-12 col-xs-12 wow fadeInRight " data-wow-delay="0.2s ">
+                    <div class="display-table width-100 height-100 ">
+                        <div class="display-table-cell vertical-align-middle padding-twelve-lr sm-text-center sm-no-padding width-100 text-white">
+                            <ul class="list-style-9 margin-twelve-left ">
+                                <li class="text-uppercase"><span class="display-block text-extra-small">
+                                  <i></i>Name</span>{{user.displayName}}</li>
+                                <li class="text-uppercase"><span class="display-block text-extra-small">
+                                  <i></i>Email</span>{{user.email}}</li>
+                                <li class="text-uppercase">
+                                    <span class="display-block text-extra-small">
+                                      <i></i>Field</span>
+                                    <ng-container *ngIf="user.field else noField">
+                                        {{user.field}}
+                                    </ng-container>
+                                    <ng-template #noField>
+                                        <a [routerLink]="['/', 'dashboard', 'edit']" routerLinkActive="router-link-active" class="text-white"><i class="icon-pencil"></i> Specify your field</a>
+                                    </ng-template>
+                                </li>
+                                <li class="text-uppercase">
+                                    <span class="display-block text-extra-small">
+                                      <i></i>School</span>
+                                    <ng-container *ngIf="user.school else noSchool">
+                                        {{user.school}}
+                                    </ng-container>
+                                    <ng-template #noSchool>
+                                        <a [routerLink]="['/', 'dashboard', 'edit']" routerLinkActive="router-link-active" class="text-white"><i class="icon-pencil"></i> Specify your school</a>
+                                    </ng-template>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/', 'dashboard', 'edit']" routerLinkActive="router-link-active" class="btn btn-small btn-deep-pink margin-30px-top xs-margin-three-top">Edit Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</ng-container>
+
+<ng-template #noAuth>
+
+</ng-template>
