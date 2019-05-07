@@ -21,7 +21,7 @@ export class NotificationService {
   }
 
   success(message: string) {
-    this.notif.success('Great', message);
+    this.notif.success('Great!', message);
     console.log(message);
   }
 

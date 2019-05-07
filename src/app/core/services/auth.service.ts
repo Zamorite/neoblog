@@ -91,7 +91,6 @@ export class AuthService {
     private checkUserDoc(userRef: AngularFirestoreDocument<any>) {
 
       let field;
-      let dept;
       let sch;
 
       userRef.get().subscribe(
@@ -99,12 +98,11 @@ export class AuthService {
           const usr = snap.data();
 
           field = usr.field ? usr.field : null;
-          dept = usr.department ? usr.department : null;
           sch = usr.school ? usr.school : null;
         }
       ).add(
         () => {
-          if (field && dept && sch) {
+          if (field && sch) {
             return this.router.navigate(['/']);
           } else {
             return this.router.navigate(['/', 'dashboard', 'edit']);

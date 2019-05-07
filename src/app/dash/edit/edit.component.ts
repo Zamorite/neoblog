@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NotificationService } from 'src/app/core/services/notification.service';
-import { User } from 'src/app/core/models/user.model';
+import { NotificationService } from '../../core/services/notification.service';
+import { User } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-edit',
@@ -34,6 +34,7 @@ export class EditComponent implements OnInit {
       school: ['', Validators.required]
     }
   );
+
 
   ngOnInit() {
 

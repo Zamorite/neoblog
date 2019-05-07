@@ -6,10 +6,10 @@
             <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
                 <div class="display-table-cell vertical-align-middle text-center padding-30px-tb">
                     <!-- start sub title -->
-                    <span class="display-block text-white opacity6 alt-font margin-5px-bottom">We are awesome designer</span>
+                    <span class="display-block text-white opacity6 alt-font margin-5px-bottom">{{tag ? 'View articles related to' : 'Explore articles from different categories'}}</span>
                     <!-- end sub title -->
                     <!-- start page title -->
-                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">About simple</h1>
+                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">{{tag ? tag : 'Articles'}}</h1>
                     <!-- end page title -->
                 </div>
             </div>
@@ -20,119 +20,24 @@
 
 <div class="container">
     <div class="row equalize xs-equalize-auto padding-80px-top sm-padding-50px-top xs-padding-30px-top">
-        <!-- start post item -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
+        <!-- start post items -->
+        <div *ngFor="let post of posts | async" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
             <div class="blog-post blog-post-style2">
                 <div class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom">
-                    <a href="blog-post-layout-01.html">
-                        <img src="../../assets/images/blog-img111.jpg" alt="Pofo">
+                    <a [routerLink]="['/', 'post', post.id]" routerLinkActive="router-link-active">
+                        <img class="width-100 height-150px" src="{{post.image}}" alt="Pofo">
                     </a>
                 </div>
                 <div class="post-details">
-                    <a href="blog-post-layout-01.html" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">Recognizing the need is the primary condition for design.</a>
+                    <a [routerLink]="['/', 'post', post.id]" routerLinkActive="router-link-active" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">{{post.title}}</a>
                     <div class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"></div>
-                    <div class="author">
-                        <img src="../../assets/images/avtar-01.jpg" alt="Pofo" class="border-radius-100">
-                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">Jay Benjamin</a>&nbsp;&nbsp;|&nbsp;&nbsp;13 May 2017</span>
+                    <div *ngIf="post.author as author" class="author">
+                        <img src="{{author.photoURL}}" alt="{{author.displayName}}" class="border-radius-100">
+                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">{{author.displayName}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;{{post.createdAt | fireDate | moment}}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- end post item -->
-        <!-- start post item -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
-            <div class="blog-post blog-post-style2">
-                <div class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom">
-                    <a href="blog-post-layout-02.html">
-                        <img src="../../assets/images/blog-img112.jpg" alt="Pofo">
-                    </a>
-                </div>
-                <div class="post-details">
-                    <a href="blog-post-layout-02.html" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">Good design is obvious. Great design is transparent.</a>
-                    <div class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"></div>
-                    <div class="author">
-                        <img src="../../assets/images/avtar-02.jpg" alt="Pofo" class="border-radius-100">
-                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">Herman Miller</a>&nbsp;&nbsp;|&nbsp;&nbsp;29 April 2017</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end post item -->
-        <!-- start post item -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
-            <div class="blog-post blog-post-style2">
-                <div class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom">
-                    <a href="blog-post-layout-03.html">
-                        <img src="../../assets/images/blog-img113.jpg" alt="Pofo">
-                    </a>
-                </div>
-                <div class="post-details">
-                    <a href="blog-post-layout-03.html" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">Design is not just what it looks like and feels like.</a>
-                    <div class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"></div>
-                    <div class="author">
-                        <img src="../../assets/images/avtar-03.jpg" alt="Pofo" class="border-radius-100">
-                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">Hugh Macleod</a>&nbsp;&nbsp;|&nbsp;&nbsp;18 April 2017</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end post item -->
-        <!-- start post item -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
-            <div class="blog-post blog-post-style2">
-                <div class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom">
-                    <a href="blog-post-layout-01.html">
-                        <img src="../../assets/images/blog-img111.jpg" alt="Pofo">
-                    </a>
-                </div>
-                <div class="post-details">
-                    <a href="blog-post-layout-01.html" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">Recognizing the need is the primary condition for design.</a>
-                    <div class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"></div>
-                    <div class="author">
-                        <img src="../../assets/images/avtar-01.jpg" alt="Pofo" class="border-radius-100">
-                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">Jay Benjamin</a>&nbsp;&nbsp;|&nbsp;&nbsp;13 May 2017</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end post item -->
-        <!-- start post item -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
-            <div class="blog-post blog-post-style2">
-                <div class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom">
-                    <a href="blog-post-layout-01.html">
-                        <img src="../../assets/images/blog-img111.jpg" alt="Pofo">
-                    </a>
-                </div>
-                <div class="post-details">
-                    <a href="blog-post-layout-01.html" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">Recognizing the need is the primary condition for design.</a>
-                    <div class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"></div>
-                    <div class="author">
-                        <img src="../../assets/images/avtar-01.jpg" alt="Pofo" class="border-radius-100">
-                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">Jay Benjamin</a>&nbsp;&nbsp;|&nbsp;&nbsp;13 May 2017</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end post item -->
-        <!-- start post item -->
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom">
-            <div class="blog-post blog-post-style2">
-                <div class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom">
-                    <a href="blog-post-layout-01.html">
-                        <img src="../../assets/images/blog-img111.jpg" alt="Pofo">
-                    </a>
-                </div>
-                <div class="post-details">
-                    <a href="blog-post-layout-01.html" class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100">Recognizing the need is the primary condition for design.</a>
-                    <div class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"></div>
-                    <div class="author">
-                        <img src="../../assets/images/avtar-01.jpg" alt="Pofo" class="border-radius-100">
-                        <span class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block">by <a href="home-blog-grid.html" class="text-medium-gray">Jay Benjamin</a>&nbsp;&nbsp;|&nbsp;&nbsp;13 May 2017</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end post item -->
+        <!-- end post items -->
     </div>
 </div>

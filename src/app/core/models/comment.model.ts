@@ -3,10 +3,11 @@ export interface Comment {
     pid?: any;
     author?: any;
     content: string;
-    image?: string;
     heartCount: number;
     hearts?: any;
-    
-    qid?: any;
+    createdAt?: Date;
+    // reply id and reply author
+    rid?: string;
+    ra?: string;
 }
   

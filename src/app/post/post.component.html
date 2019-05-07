@@ -1,3 +1,157 @@
-<p>
-  post works!
-</p>
+<div *ngIf="post$ | async as p; else notFound">
+    <!-- start page title section -->
+    <section class="wow fadeIn cover-background background-position-top" [style.background-image]="util.sanitize(p.image) || '../../assets/images/parallax-bg53.jpg'">
+        <div class="opacity-medium bg-extra-dark-gray"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
+                    <div class="display-table-cell vertical-align-middle text-center padding-30px-tb">
+                        <!-- start page title -->
+                        <h1 class="text-white alt-font font-weight-600 margin-10px-bottom">{{p.title}}</h1>
+                        <!-- end page title -->
+                        <!-- start sub title -->
+                        <span class="text-white opacity6 alt-font margin-10px-bottom display-block text-uppercase text-small">{{p.createdAt | fireDate | moment}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;by <a href="blog-masonry.html" class="text-white">{{p.author?.displayName}}</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="blog-masonry.html" class="text-white" *ngFor="let tag of p.tags">{{tag}} </a></span>
+                    </div>
+                    <!-- end sub title -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end page title section -->
+
+    <!-- start section -->
+    <section class="wow fadeIn">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 center-col last-paragraph-no-margin text-large line-height-30 text-medium-gray text-justify xs-text-center xs-line-height-26" [innerHTML]="p.text">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- start blog post section -->
+    <section class="wow fadeIn no-padding-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-sm-12 col-xs-12 center-col no-padding">
+                    <div class="col-md-8 col-sm-6 col-xs-12 text-left xs-text-center xs-margin-10px-bottom">
+                        <div class="tag-cloud">
+                            <a href="blog-grid.html" *ngFor="let tag of p.tags">{{tag}}</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-12 text-right xs-text-center">
+                        <div class="social-icon-style-6">
+                            <ul class="extra-small-icon">
+                                <li>
+                                    <a (click)="like(p.id)" class="likes-count">
+                                        <i class="fas fa-heart"></i>
+
+                                        <span class="text-small">{{p.heartCount}}</span></a>
+                                </li>
+                                <li>
+                                    <a shareButton="whatsapp" [description]="'Check out this post by ' + p.author?.displayName + ' on NeoBlog\n\n'" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                </li>
+                                <li>
+                                    <a shareButton="twitter" [description]="'Check out this post by ' + p.author?.displayName + ' on NeoBlog\n\n'" [tags]="p.tags" class="twitter"><i class="fab fa-twitter"></i></a>
+                                </li>
+                                <li>
+                                    <a shareButton="facebook" [title]="p.title" [description]="'Check out this post by ' + p.author?.displayName + ' on NeoBlog'" [image]="p.image" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="p.author as author" class="row">
+                <div class="col-md-10 col-sm-12 col-xs-12 center-col margin-50px-top sm-margin-30px-top wow fadeInUp">
+                    <div class="display-table width-100 border-all border-color-extra-light-gray padding-50px-all sm-padding-30px-all xs-padding-20px-all">
+                        <div class="display-table-cell width-130px text-center vertical-align-top xs-margin-15px-bottom xs-width-100 xs-display-block xs-text-center">
+                            <img [src]="author.photoURL || '../../assets/images/avtar-01.jpg'" class="img-circle width-100px" alt="" />
+                        </div>
+                        <div class="padding-40px-left display-table-cell vertical-align-top last-paragraph-no-margin xs-no-padding-left xs-display-block xs-text-center">
+                            <a href="#" class="text-extra-dark-gray text-uppercase alt-font font-weight-600 margin-10px-bottom display-inline-block text-small">{{author.displayName}}</a>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
+                                a type specimen book. It has survived not only five centuries.</p>
+                            <a *ngIf="p.author" [routerLink]="[ '/', 'port', author.uid ]" class="btn btn-very-small btn-black margin-20px-top">All author posts</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end blog post section -->
+
+
+    <!-- start section -->
+    <section *ngIf="p.comments | async as comments" class="wow fadeIn">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-sm-12 col-xs-12 center-col text-center margin-80px-bottom sm-margin-50px-bottom xs-margin-15px-bottom">
+                    <div class="position-relative overflow-hidden width-100">
+                        <span class="text-small text-outside-line-full alt-font font-weight-600 text-uppercase text-extra-dark-gray">{{comments.length}} Comment{{comments.length > 1 ? 's' : ''}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10 col-sm-12 col-xs-12 center-col">
+                    <ul class="blog-comment">
+                        <li [id]="'c_' + c.id" *ngFor="let c of comments">
+                            <div class="display-table width-100">
+                                <div class="display-table-cell width-100px xs-width-50px text-center vertical-align-top xs-display-block xs-margin-10px-bottom">
+                                    <img src="{{c.author?.photoURL}}" class="img-circle width-85 xs-width-100" alt="" />
+                                </div>
+                                <div class="padding-40px-left display-table-cell vertical-align-top last-paragraph-no-margin xs-no-padding-left xs-display-block">
+                                    <a href="#" class="text-extra-dark-gray text-uppercase alt-font font-weight-600 text-small">{{c.author?.displayName}}</a>
+                                    <a *ngIf="auth.user | async" [routerLink]="['/', 'post', p.id]" routerLinkActive="router-link-active" scrollTo="comments" class="inner-link btn-reply text-uppercase alt-font text-extra-dark-gray" (click)="reply(c.id, c.author?.displayName)">Reply</a>
+                                    <div *ngIf="c.rid" class="text-small text-dark-gray alt-font text-uppercase margin-10px-bottom">Replying <a scrollTo="{{'c_' + c.rid}}">{{c.ra}}</a></div>
+                                    <div class="text-small text-medium-gray text-uppercase margin-10px-bottom">{{c.createdAt | fireDate | moment}}</div>
+                                    <p>{{c.content}}</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end section -->
+    <!-- start Comment form section -->
+    <section class="wow fadeIn bg-light-gray" id="comments">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-sm-12 col-xs-12 center-col text-center margin-80px-bottom xs-margin-40px-bottom">
+                    <div class="position-relative overflow-hidden width-100">
+                        <span class="text-small text-outside-line-full alt-font font-weight-600 text-uppercase text-extra-dark-gray">{{replying ? 'Reply ' + replying.who : 'Drop A Comment'}}</span>
+                    </div>
+                    <div class="position-relative overflow-hidden width-100">
+                        <a *ngIf="replying" class="text-small btn-reply alt-font text-extra-dark-gray" (click)="replying = null">Nah! Just commenting...</a>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="auth.user | async; else noAuth" class="row">
+                <div class="col-md-10 col-sm-12 col-xs-12 no-padding center-col text-center">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <textarea [(ngModel)]="comment.content" placeholder="Enter your comment here.." rows="8" class="medium-textarea"></textarea>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                        <button [disabled]="comment.content == null || comment.content.trim() == ''" (click)="submitComment()" class="btn btn-dark-gray btn-small margin-15px-top" type="submit">Send message</button>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noAuth>
+                <div class="text-large text-center">
+                    <p>Hi there! Kindly note that you'd have to sign in to be able to comment on posts such as this one.</p>
+                    <a [routerLink]="[ '/', 'auth' ]" class="btn btn-very-small btn-black margin-20px-top">Sign in</a>
+                </div>
+            </ng-template>
+
+        </div>
+    </section>
+    <!-- end Comment form section -->
+
+</div>
+
+<ng-template #notFound>
+    <app-not-found></app-not-found>
+</ng-template>

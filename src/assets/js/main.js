@@ -1470,21 +1470,33 @@ $(document).ready(function() {
     /*==============================================================*/
     //Modal popup - START CODE
     /*==============================================================*/
+    // $('.modal-popup').magnificPopup({
+    //     type: 'inline',
+    //     preloader: false,
+    //     // modal: true,
+    //     blackbg: true,
+    //     callbacks: {
+    //         open: function() {
+    //             $('html').css('margin-right', 0);
+    //         }
+    //     }
+    // });
+    // $(document).on('click', '.popup-modal-dismiss', function(e) {
+    //     e.preventDefault();
+    //     $.magnificPopup.close();
+    // });
+
     $('.modal-popup').magnificPopup({
         type: 'inline',
         preloader: false,
         // modal: true,
-        blackbg: true,
-        callbacks: {
-            open: function() {
-                $('html').css('margin-right', 0);
-            }
-        }
+        blackbg: true
     });
     $(document).on('click', '.popup-modal-dismiss', function(e) {
         e.preventDefault();
         $.magnificPopup.close();
     });
+
     /*==============================================================*/
     //Modal popup - END CODE
     /*==============================================================*/

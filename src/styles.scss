@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
+// Import Quill css...
+@import url('../node_modules/quill/dist/quill.snow.css');
 .z-head {
     padding: 10vh;
     height: 30vh;

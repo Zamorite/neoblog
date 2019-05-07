@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Observable, combineLatest, of, defer } from 'rxjs';
-import { switchMap, map, defaultIfEmpty } from 'rxjs/operators';
+import { map, defaultIfEmpty, switchMap } from 'rxjs/operators';
 import { firestore } from 'firebase';
 import { NotificationService } from './notification.service';
 import { FileUploadService } from './file-upload.service';
@@ -13,9 +13,10 @@ import { Comment } from '../models/comment.model';
 @Injectable({
   providedIn: 'root'
 })
-export class postService {
+export class PostService {
   loading = false;
   uid: string;
+  liked: string[];
 
   constructor(
     private afs: AngularFirestore,
@@ -28,6 +29,7 @@ export class postService {
         usr => {
           if (usr) {
             this.uid = usr.uid;
+            this.liked = usr.liked;
           }
         }
       );
@@ -35,39 +37,42 @@ export class postService {
 
     getTop(): Observable<Post[]> {
       // don't forget to add index for the query beneath... 👍 DONE!
-      const p_col$ = this.afs.collection<Post>('posts', ref => {
-        return ref.where('heartCount', '>=', 1).limit(10).orderBy('heartCount', 'desc').orderBy('createdAt', 'desc');
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
+        // don't forget to change '<' to '>'
+        return ref.where('heartCount', '<=', 1).limit(10).orderBy('heartCount', 'desc').orderBy('createdAt', 'desc');
       });
-      return p_col$.valueChanges();
+      return PCol$.valueChanges();
     }
 
     getLatest(): Observable<Post[]> {
       // don't forget to add index for the query beneath... 👍 DONE!
-      const p_col$ = this.afs.collection<Post>('posts', ref => {
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
         return ref.where('heartCount', '<=', 3).limit(10).orderBy('heartCount', 'desc').orderBy('createdAt', 'desc');
       });
-      return p_col$.valueChanges();
+      return PCol$.valueChanges();
     }
 
     getTopPostsByTag(tag: string): Observable<Post[]> {
-      const p_col$ = this.afs.collection<Post>('posts', ref => {
-        return ref.where('tags', 'array-contains', tag).where('heartCount', '>=', 1).limit(10).orderBy('createdAt', 'desc');
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
+        // Dont't forget to uncomment this and comment the right one...
+        return ref.where('tags', 'array-contains', tag).where('heartCount', '<=', 1).limit(10).orderBy('heartCount', 'desc').orderBy('createdAt', 'desc');
+        // return ref.where('tags', 'array-contains', tag).where('heartCount', '>=', 1).limit(10).orderBy('createdAt', 'desc');
       });
-      return p_col$.valueChanges();
+      return PCol$.valueChanges();
     }
 
     getLatestPostsByTag(tag: string): Observable<Post[]> {
-      const p_col$ = this.afs.collection<Post>('posts', ref => {
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
         return ref.where('tags', 'array-contains', tag).where('heartCount', '<=', 3).limit(10).orderBy('createdAt', 'desc');
       });
-      return p_col$.valueChanges();
+      return PCol$.valueChanges();
     }
 
     getTopPostsByField(field: string): Observable<Post[]> {
-      const p_col$ = this.afs.collection<Post>('posts', ref => {
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
         return ref.where('field', '==', field).where('heartCount', '>=', 1).limit(10).orderBy('createdAt', 'desc');
       });
-      return p_col$.valueChanges();
+      return PCol$.valueChanges();
     }
 
     getPostById(id: string): Observable<Post> {
@@ -76,17 +81,24 @@ export class postService {
     }
 
     getLatestPostsByField(field: string): Observable<Post[]> {
-      const p_col$ = this.afs.collection<Post>('posts', ref => {
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
         return ref.where('field', '==', field).where('heartCount', '<=', 3).limit(10).orderBy('createdAt', 'desc');
       });
-      return p_col$.valueChanges();
+      return PCol$.valueChanges();
+    }
+
+    getPostsByAuthor(author: string): Observable<Post[]> {
+      const PCol$ = this.afs.collection<Post>('posts', ref => {
+        return ref.where('author', '==', author).limit(20).orderBy('createdAt', 'desc');
+      });
+      return PCol$.valueChanges();
     }
 
     getComments(pid: string): Observable<Comment[]> {
       const CommentCollection$ = this.afs.collection<Comment>('comments', ref => {
         return ref.where('pid', '==', pid);
       });
-      return <Observable<Comment[]>> CommentCollection$.valueChanges();
+      return CommentCollection$.valueChanges();
     }
 
 
@@ -112,7 +124,8 @@ export class postService {
               return userDocs.length ? combineLatest(userDocs) : of([]);
             }),
             map(arr => {
-              arr.forEach(v => (joinKeys[(<any>v).uid] = v));
+              arr.forEach(v => (joinKeys[(v as any).uid] = v));
+
               post = post.map(v => {
                 return { ...v, author: joinKeys[v.author] };
               });
@@ -128,34 +141,21 @@ export class postService {
     joinComments(post$: Observable<any>) {
       return defer(
         () => {
-          let posts;
-          const joinKeys = {};
+          let post;
 
           return post$.pipe(
-            switchMap(p => {
+            switchMap<any, {}>(p => {
               // Unique User IDs
-              posts = p;
+              post = p;
 
-              const commentsDocs = p.map(
-                post => this.joinUsers(this.getComments(post.id))
-              );
+              const commentsDocs = this.joinUsers(this.getComments(p.id));
 
-
-              return commentsDocs.length ? combineLatest(commentsDocs) : of([]);
+              return commentsDocs ? of(commentsDocs) : of([]);
             }),
-            map(arr => {
-              arr.forEach(v => {
+            map(v => {
 
-                v.map(
-                  vee => (joinKeys[(<any>vee).pid] = v)
-                );
-              });
-
-              posts = posts.map(v => {
-                return { ...v, comments: joinKeys[v.id] };
-              });
-
-              return posts;
+              post = {...post, comments: v };
+              return post;
             }),
             defaultIfEmpty(false)
           );
@@ -183,7 +183,7 @@ export class postService {
               return userDoc ? userDoc : of(null);
             }),
             map(doc$ => {
-              joinKeys[(<any>doc$).uid] = doc$;
+              joinKeys[(doc$ as any).uid] = doc$;
               post = { ...post, author: joinKeys[post.author] };
 
               return post;
@@ -202,19 +202,13 @@ export class postService {
 
   addPost(post: Post) {
     post.id = this.afs.createId();
-    post.createdAt = new Date;
+    post.createdAt = new Date();
+    post.author = this.uid;
 
-    const p_col$ = this.afs.collection(`posts`);
+    const PCol$ = this.afs.collection(`posts`);
 
-    return p_col$.doc(post.id).set(post).then(
-      async () => {
-
-        const photoURL = this.file.getPhotoURL();
-        this.file.resetPhotoURL();
-
-        if (photoURL) {
-          p_col$.doc(post.id).update({image: photoURL});
-        }
+    return PCol$.doc(post.id).set(post).then(
+      () => {
 
         // increase the number of posts on the user's document
         const user = this.afs.doc(`users/${this.uid}`);
@@ -239,34 +233,34 @@ export class postService {
   addComment(pid: string, comment: Comment) {
     comment.author = this.uid;
     comment.id = this.afs.createId();
-    const p_col$ = this.afs.collection(`posts`);
+    comment.createdAt = new Date();
+
+    const PCol$ = this.afs.collection(`posts`);
 
     this.afs.collection<Comment>('comments').doc(comment.id).set(comment).then(
       () => {
 
-        const photoURL = this.file.getPhotoURL();
-        this.file.resetPhotoURL();
-
-        if (photoURL) {
-          this.afs.collection<Comment>('comments').doc(comment.id).update({image: photoURL});
-        }
-
-        p_col$.doc(pid).update({comments: firestore.FieldValue.arrayUnion(comment.id)});
-        p_col$.doc(pid).update({commenters: firestore.FieldValue.arrayUnion(this.uid)});
+        PCol$.doc(pid).update({comments: firestore.FieldValue.arrayUnion(comment.id)});
+        // PCol$.doc(pid).update({commenters: firestore.FieldValue.arrayUnion(this.uid)});
 
         // increase the number of comments on the user's document
         const user$ = this.afs.doc(`users/${this.uid}`);
 
-        user$.get().subscribe(
-          userDoc => {
-            user$.update({commented: userDoc.data().commented + 1});
-          }
-        );
+        // user$.get().subscribe(
+        //   userDoc => {
+        //     user$.update({commented: userDoc.data().commented + 1});
+        //   }
+        // );
 
         this.notif.notifyAuthor(pid);
+
+        return Promise.resolve(true);
       }
     ).catch(
-      // Error Handler goes here...
+      err => {
+        this.notify.logError(err);
+        return Promise.resolve(true);
+      }
     );
   }
 
@@ -274,37 +268,50 @@ export class postService {
     const postCollection$ = this.afs.collection<Post>('posts', ref => {
       return ref.where('uid', '==', this.uid);
     });
-    const post$ = <Observable<Post[]>> postCollection$.valueChanges();
+    const post$ = postCollection$.valueChanges();
     return post$;
   }
 
-  getCommentedPosts(): Observable<Post[]> {
-    const postCollection$ = this.afs.collection<Post>('posts', ref => {
-      return ref.where('commentators', 'array-contains', this.uid);
-    });
-    const post$ = <Observable<Post[]>> postCollection$.valueChanges();
-    return post$;
-  }
+  // getCommentedPosts(): Observable<Post[]> {
+  //   const postCollection$ = this.afs.collection<Post>('posts', ref => {
+  //     return ref.where('commentators', 'array-contains', this.uid);
+  //   });
+  //   const post$ = postCollection$.valueChanges();
+  //   return post$;
+  // }
 
 
   /*
     Updating Like Counts for posts and Answers
   */
 
-  toggleLike(post: boolean, id: string) {
-    const like = { liker: null, createdAt: null };
 
-    like.liker = this.uid;
-    like.createdAt = new Date;
+  toggleHeart(id: string) {
+    const posts$ = this.afs.collection(`posts`);
 
-    let l_col$: AngularFirestoreCollection;
+    if (this.uid) {
 
-    if (post) {
-      l_col$ = this.afs.collection(`posts`);
+      if (this.liked && this.liked.includes(id)) {
+
+        posts$.doc(id).update({heartCount: firestore.FieldValue.increment(-1)})
+        .then(
+          () => this.afs.doc(`users/${this.uid}`).update({liked: firestore.FieldValue.arrayRemove(id)})
+          .then(
+              () => this.notif.success('Post unliked!')
+            )
+          );
+        } else {
+          
+          posts$.doc(id).update({heartCount: firestore.FieldValue.increment(1)})
+          .then(
+            () => this.afs.doc(`users/${this.uid}`).update({liked: firestore.FieldValue.arrayUnion(id)})
+            .then(
+              () => this.notif.success('Post liked!')
+            )
+          );
+      }
     } else {
-      l_col$ = this.afs.collection(`comments`);
+      this.notif.logError('Oops!', 'You need to be signed in to like posts');
     }
-
-    l_col$.doc(id).collection('hearts').add(like);
   }
 }

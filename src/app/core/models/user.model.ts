@@ -8,10 +8,11 @@ export interface User {
   school?: string;
   field?: string;
   posted?: number;
+  liked?: string[];
 
-  pinned?: any;
-  notifications?: Notification[];
-  answered?: number;
-  asked?: number;
-  exam?: string;
+  // pinned?: any;
+  // notifications?: Notification[];
+  // answered?: number;
+  // asked?: number;
+  // exam?: string;
 }

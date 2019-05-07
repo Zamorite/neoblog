@@ -9,37 +9,37 @@ export class HomeComponent implements OnInit {
 
   categories = [
     {
-      link: 'math',
+      link: 'math.jpg',
       name: 'mathematics',
       field: 'sciences'
     },
     {
-      link: 'eng',
+      link: 'eng.jpg',
       name: 'english language',
       field: 'arts'
     },
     {
-      link: 'phy',
+      link: 'phx.jpg',
       name: 'physics',
       field: 'sciences'
     },
     {
-      link: 'comm',
+      link: 'com.jpg',
       name: 'commerce',
       field: 'commercials'
     },
     {
-      link: 'chem',
+      link: 'chem.png',
       name: 'chemistry',
       field: 'sciences'
     },
     {
-      link: 'lit',
+      link: 'lit.png',
       name: 'literature',
       field: 'arts'
     },
     {
-      link: 'bio',
+      link: 'bio.jpg',
       name: 'biology',
       field: 'sciences'
     },

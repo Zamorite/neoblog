@@ -9,19 +9,23 @@ import { AuthComponent } from './user/auth/auth.component';
 import { ProfileComponent } from './dash/profile/profile.component';
 import { EditComponent } from './dash/edit/edit.component';
 import { NotFoundComponent } from './except/not-found/not-found.component';
+import { WriteComponent } from './write/write.component';
+import { PortComponent } from './port/port.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
   {path: 'auth', component: AuthComponent},
-  {path: 'dashboard', canActivate: [AuthGuard]r, children:
+  {path: 'write', component: WriteComponent},
+  {path: 'dashboard', canActivate: [AuthGuard], children:
   [
     {path: '', component: ProfileComponent},
     {path: 'edit', component: EditComponent},
   ]
   },
   {path: 'posts', component: PostsComponent},
-  {path: 'post/:pid', component: PostComponent},
+  {path: 'port/:author', component: PortComponent},
+  {path: 'post/:id', component: PostComponent},
   {path: '**', component: NotFoundComponent, pathMatch: 'full'},
 ];
 

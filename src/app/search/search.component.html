@@ -1,0 +1,20 @@
+<ais-instantsearch [config]="searchConfig">
+
+    <ais-search-box (change)="searchChanged($event)"></ais-search-box>
+
+    <ais-hits *ngIf="showResults">
+        <ng-template let-hits="hits">
+            <div *ngFor="let hit of hits">
+
+                <img [src]="hit.avatar" width="30px">
+
+                <ais-highlight attribute="name" [hit]="hit"></ais-highlight>
+
+                <div class="bio">
+                    {{ hit.bio | slice:0:30 }}...
+                </div>
+
+            </div>
+        </ng-template>
+    </ais-hits>
+</ais-instantsearch>

@@ -10,10 +10,5 @@ export interface Post {
     hearts?: any;
     field?: string;
     comments?: any[];
-    commentators?: any[];
-    
-    date?: Date;
-    exam?: string;
-    answers?: any[];
-    answerers?: any[];
+    // commentators?: any[];
 }

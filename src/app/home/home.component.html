@@ -277,14 +277,15 @@
     <div class="container-fluid no-padding">
         <div class="row">
             <div class="filter-content overflow-hidden padding-15px-lr">
-                <ul class="portfolio-grid work-4col gutter-small hover-option7">
+                <!-- hover-option3 looks interesting - I think I can work something out -->
+                <ul class="portfolio-grid work-4col gutter-small hover-option8">
                     <li class="grid-sizer"></li>
                     <ng-container *ngFor="let category of categories">
                         <!-- start portfolio item -->
-                        <li class="grid-item {{category.field}} wow fadeInUp">
-                            <a href="single-project-page-03.html">
+                        <li class="grid-item col-xs-12 col-md-3 col-lg-2 {{category.field}} wow fadeInUp">
+                            <a [routerLink]="['/', 'posts', {tag: category.name}]" routerLinkActive="router-link-active">
                                 <figure>
-                                    <div class="portfolio-img"><img src="../../assets/images/categories/{{category.link}}.jpg" [alt]="category.name" class="cat-img" /></div>
+                                    <div class="portfolio-img"><img src="../../assets/images/categories/{{category.link}}" [alt]="category.name" class="cat-img" /></div>
                                     <figcaption>
                                         <div class="portfolio-hover-main text-center last-paragraph-no-margin">
                                             <div class="portfolio-hover-box vertical-align-middle">
