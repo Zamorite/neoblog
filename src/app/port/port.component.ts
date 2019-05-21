@@ -11,32 +11,36 @@ import { PostService } from '../core/services/posts.service';
   templateUrl: './port.component.html',
   styleUrls: ['./port.component.scss']
 })
-export class PortComponent implements OnInit, OnDestroy {
+export class PortComponent implements OnInit {
 
   posts: Observable<Post[]>;
 
   constructor(
     public auth: AuthService,
-    private util: UtilService,
+    public util: UtilService,
     public db: PostService,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.util.setBoards({
-      header: true,
-      footer: false,
-    });
+
+    this.util.load();
 
     const uid = this.route.snapshot.params.author;
-    this.posts = this.db.getPostsByAuthor(uid)
+    this.posts = this.db.getPostsByAuthor(uid);
+
+    this.posts.subscribe(
+      p => this.util.loaded()
+    ).add(
+      () => this.util.loaded()
+    );
   }
 
-  ngOnDestroy(): void {
-    this.util.setBoards({
-      header: true,
-      footer: true,
-    });
-  }
+  // ngOnDestroy(): void {
+  //   this.util.setBoards({
+  //     header: true,
+  //     footer: true,
+  //   });
+  // }
 
 }

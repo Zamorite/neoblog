@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   providedIn: 'root'
 })
 export class UtilService {
+  public loading = false;
 
   public header = true;
   public footer = true;
@@ -25,6 +26,14 @@ export class UtilService {
 
   sanitize(url) {
     return this.sanitizer.bypassSecurityTrustStyle(`url(${url})`);
+  }
+
+  load() {
+    this.loading = true;
+  }
+
+  loaded() {
+    this.loading = false;
   }
 
 }

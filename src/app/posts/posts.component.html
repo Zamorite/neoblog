@@ -1,5 +1,5 @@
 <!-- start page title section -->
-<section class="wow fadeIn cover-background background-position-top z-head" style="background-image:url('../assets/images/about-banner.jpg');">
+<section class="wow fadeIn cover-background background-position-top z-head" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');">
     <div class="opacity-medium bg-extra-dark-gray"></div>
     <div class="container">
         <div class="row">
@@ -9,7 +9,7 @@
                     <span class="display-block text-white opacity6 alt-font margin-5px-bottom">{{tag ? 'View articles related to' : 'Explore articles from different categories'}}</span>
                     <!-- end sub title -->
                     <!-- start page title -->
-                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">{{tag ? tag : 'Articles'}}</h1>
+                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">{{tag ? (tag | titlecase) : 'Articles'}}</h1>
                     <!-- end page title -->
                 </div>
             </div>
@@ -17,6 +17,7 @@
     </div>
 </section>
 <!-- end page title section -->
+
 
 <div class="container">
     <div class="row equalize xs-equalize-auto padding-80px-top sm-padding-50px-top xs-padding-30px-top">
@@ -41,3 +42,15 @@
         <!-- end post items -->
     </div>
 </div>
+
+
+
+<div *ngIf="util.loading" class="height-100">
+        <app-loader></app-loader>
+    </div>
+
+
+<div *ngIf="(posts | async)?.length == 0" class="height-50">
+        <h4 class="text-center">Oops!</h4>
+            <p class="text-center text-medium">We could not find any posts in this category.</p>
+    </div>

@@ -1,32 +1,58 @@
-<!-- start slider section -->
-<section class="no-padding full-screen">
-    <div class="swiper-container swiper-vertical-pagination swiper-container-vertical no-transition">
-        <div class="swiper-wrapper">
-            <!-- start slide item -->
-            <div *ngFor="let p of posts | async" class="swiper-slide cover-background" [style.background-image]="util.sanitize(p.image) || '../../assets/images/homepage-19-slider-01.jpg'">
-                <div class="opacity-medium bg-extra-dark-gray"></div>
-                <div class="full-screen width-100 position-relative">
-                    <div class="slider-typography text-left">
-                        <div class="slider-text-middle-main">
-                            <div class="slider-text-bottom padding-100px-lr xs-padding-30px-lr">
-                                <div class="swiper-bottom-content bg-deep-pink width-500px padding-80px-all margin-50px-left sm-no-margin-left xs-width-90 xs-padding-20px-all">
-                                    <h4 class="xs-margin-5px-bottom"><a [routerLink]="[ '/', 'post', p.id]" class="font-weight-600 text-white alt-font text-white-hover">{{p.title}}</a></h4>
-                                    <span class="alt-font text-uppercase text-small text-extra-dark-gray font-weight-600"><a [routerLink]="[ '/', 'posts', {tag: tag}]" class="text-white" *ngFor="let tag of p.tags">{{tag}} </a></span>
-                                    <div class="box-arrow">
-                                        <a [routerLink]="[ '/', 'post', p.id]"><img src="../../assets/images/homepage-option19-arrow-bg.jpg" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div *ngIf="util.loading" class="height-100">
+    <app-loader></app-loader>
+</div>
+
+
+<div *ngIf="(posts | async)?.length == 0" class="height-100">
+    <div class="mx-auto">
+        <h4 class="text-center">Oops!</h4>
+        <p class="text-center">We could not find any posts in this category.</p>
+    </div>
+</div>
+
+
+
+
+
+<!-- start page title section -->
+<section class="wow fadeIn cover-background background-position-top z-head" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');">
+    <div class="opacity-medium bg-extra-dark-gray"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
+                <div class="display-table-cell vertical-align-middle text-center padding-30px-tb">
+                    <!-- start sub title -->
+                    <span class="display-block text-white opacity6 alt-font margin-5px-bottom">Explore articles from author</span>
+                    <!-- end sub title -->
+                    <!-- start page title -->
+                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">Articles</h1>
+                    <!-- end page title -->
                 </div>
             </div>
-            <!-- end slide item -->
-            <!-- start slide item -->
         </div>
-        <!-- start slider pagination -->
-        <div class="swiper-pagination swiper-pagination-vertical swiper-pagination-white"></div>
-        <!-- end slider pagination -->
     </div>
 </section>
-<!-- end slider section -->
+<!-- end page title section -->
+    
+<div class="container">
+    <div class="row">
+        <div *ngFor="let p of posts | async" class="col-md-4 col-sm-4 col-xs-12 padding-10px-all grid-item feature-box-4 wow slideInDown">
+        <div class="position-relative overflow-hidden height-300px">
+            <figure>
+                <img class="overflow-hidden height-300px" [src]="p.image" alt="" >
+                <div class="opacity-medium bg-extra-dark-gray"></div>
+                <figcaption>
+                    <span class="text-medium-gray margin-10px-bottom display-inline-block ">
+                        <ng-container *ngFor="let t of p.tags; let idx = index">
+                            {{t}}{{(p.tags.length - 1) !== idx ? ' | ' : ''}}
+                        </ng-container>
+                    </span>
+                    <div class="bg-deep-pink separator-line-horrizontal-full display-inline-block margin-10px-bottom"></div>
+                    <span class="text-extra-large display-block text-white alt-font margin-25px-bottom width-60 md-width-100 sm-width-100 sm-margin-seven-bottom xs-width-100">{{p.title}}</span>
+                    <a [routerLink]="[ '/', 'post', p.id ]" class="btn btn-very-small btn-white font-weight-300">Check it out!</a>
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+    </div>
+</div>

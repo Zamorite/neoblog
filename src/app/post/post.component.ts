@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../core/models/post.model';
 import { AuthService } from '../core/services/auth.service';
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, Params } from '@angular/router';
 import { UtilService } from '../core/services/util.service';
 import { PostService } from '../core/services/posts.service';
 import { Comment } from '../core/models/comment.model';
@@ -13,7 +13,10 @@ import { Title, Meta } from '@angular/platform-browser';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss']
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnDestroy {
+
+  routeSub: Subscription;
+  
 
   pid: string;
   post$: Observable<any>;
@@ -36,24 +39,40 @@ export class PostComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.pid = this.route.snapshot.params.id;
-    const rawPost$ = this.db.getPostById(this.pid);
-    const withAuthor$ = this.db.joinAuthor(rawPost$);
-    // this.post$ = withAuthor$;
-    this.post$ = this.db.joinComments(withAuthor$);
 
-    this.post$.subscribe(
-      post => {
-        this.seo_title.setTitle('');
-        this.seo_meta.addTags([
-          {name: 'twitter:card', content: 'summary'},
-          {name: 'og:url', content: `/post/${post.id}`},
-          {name: 'og:title', content: post.title},
-          {name: 'og:description', content: 'Check out this wonderful post on NeoBlog!'},
-          {name: 'og:image', content: post.image},
-        ]);
+    this.util.load();
+    
+
+    this.routeSub = this.route.params.subscribe(
+      (params: Params) => {
+          
+        this.pid = params.id;
+        const rawPost$ = this.db.getPostById(this.pid);
+        const withAuthor$ = this.db.joinAuthor(rawPost$);
+        // this.post$ = withAuthor$;
+        this.post$ = this.db.joinComments(withAuthor$);
+    
+        this.post$.subscribe(
+          post => {
+            this.seo_title.setTitle('');
+            this.seo_meta.addTags([
+              {name: 'twitter:card', content: 'summary'},
+              {name: 'og:url', content: `/post/${post.id}`},
+              {name: 'og:title', content: post.title},
+              {name: 'og:description', content: 'Check out this wonderful post on NeoBlog!'},
+              {name: 'og:image', content: post.image},
+            ]);
+    
+            this.util.loaded();
+          }
+        ).add(() => this.util.loaded());
+
       }
     );
+  }
+
+  ngOnDestroy(): void {
+      this.routeSub.unsubscribe()
   }
 
 

@@ -42,6 +42,8 @@ import { LottieAnimationViewModule } from 'ng-lottie';
 import { SearchComponent } from './search/search.component';
 
 import { NgAisModule } from 'angular-instantsearch';
+import { LoaderComponent } from './loader/loader.component';
+import { FlipperComponent } from './flipper/flipper.component';
 
 
 
@@ -73,6 +75,8 @@ import { NgAisModule } from 'angular-instantsearch';
     PortComponent,
     ApproxPipe,
     SearchComponent,
+    LoaderComponent,
+    FlipperComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

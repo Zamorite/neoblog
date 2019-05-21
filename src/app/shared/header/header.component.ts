@@ -10,12 +10,22 @@ import { UtilService } from '../../core/services/util.service';
 })
 export class HeaderComponent implements OnInit {
 
+  search = false;
+
   constructor(
     public auth: AuthService,
     public util: UtilService
   ) { }
 
   ngOnInit() {
+  }
+
+  noSearch() {
+    this.search = false;
+  }
+
+  showSearch() {
+    this.search = true;
   }
 
 }

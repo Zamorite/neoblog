@@ -69,10 +69,10 @@ export class WriteComponent implements OnInit {
     return new Date();
   }
 
-
+  
   updateTags() {
     this.post.tags = this.tags.split(',');
-    this.post.tags.forEach(t => t.trim());
+    this.post.tags.forEach(t => t.toLowerCase().trim());
   }
 
 
