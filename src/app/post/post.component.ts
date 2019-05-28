@@ -1,33 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Post } from '../core/models/post.model';
-import { AuthService } from '../core/services/auth.service';
-import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, Params } from '@angular/router';
-import { UtilService } from '../core/services/util.service';
-import { PostService } from '../core/services/posts.service';
-import { Comment } from '../core/models/comment.model';
-import { Title, Meta } from '@angular/platform-browser';
+import { Component, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
+import { Post } from "../core/models/post.model";
+import { AuthService } from "../core/services/auth.service";
+import { Observable, Subscription } from "rxjs";
+import { ActivatedRoute, Params } from "@angular/router";
+import { UtilService } from "../core/services/util.service";
+import { PostService } from "../core/services/posts.service";
+import { Comment } from "../core/models/comment.model";
+import { Title, Meta } from "@angular/platform-browser";
 
 @Component({
-  selector: 'app-post',
-  templateUrl: './post.component.html',
-  styleUrls: ['./post.component.scss']
+  selector: "app-post",
+  templateUrl: "./post.component.html",
+  styleUrls: ["./post.component.scss"]
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class PostComponent implements OnInit, AfterViewInit, OnDestroy {
+  fragment: string;
 
   routeSub: Subscription;
-  
 
   pid: string;
   post$: Observable<any>;
 
-  replying: {cid: string, who: string};
+  replying: { cid: string; who: string };
 
   comment: Comment = {
     content: null,
     heartCount: 0
   };
-
 
   constructor(
     public auth: AuthService,
@@ -39,42 +38,54 @@ export class PostComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-
     this.util.load();
-    
 
-    this.routeSub = this.route.params.subscribe(
-      (params: Params) => {
-          
-        this.pid = params.id;
-        const rawPost$ = this.db.getPostById(this.pid);
-        const withAuthor$ = this.db.joinAuthor(rawPost$);
-        // this.post$ = withAuthor$;
-        this.post$ = this.db.joinComments(withAuthor$);
-    
-        this.post$.subscribe(
-          post => {
-            this.seo_title.setTitle('');
-            this.seo_meta.addTags([
-              {name: 'twitter:card', content: 'summary'},
-              {name: 'og:url', content: `/post/${post.id}`},
-              {name: 'og:title', content: post.title},
-              {name: 'og:description', content: 'Check out this wonderful post on NeoBlog!'},
-              {name: 'og:image', content: post.image},
-            ]);
-    
-            this.util.loaded();
-          }
-        ).add(() => this.util.loaded());
+    this.routeSub = this.route.params.subscribe((params: Params) => {
+      this.pid = params.id;
+      const rawPost$ = this.db.getPostById(this.pid);
+      const withAuthor$ = this.db.joinAuthor(rawPost$);
+      // this.post$ = withAuthor$;
+      this.post$ = this.db.joinComments(withAuthor$);
 
-      }
-    );
+      this.post$
+        .subscribe(post => {
+          this.seo_title.setTitle("");
+          this.seo_meta.addTags([
+            { name: "twitter:card", content: "summary" },
+            { name: "og:url", content: `/post/${post.id}` },
+            { name: "og:title", content: post.title },
+            {
+              name: "og:description",
+              content: "Check out this wonderful post on BlgPrss!"
+            },
+            { name: "og:image", content: post.image }
+          ]);
+
+          this.util.loaded();
+        })
+        .add(() => this.util.loaded());
+    });
+
+    this.route.fragment.subscribe(fragment => {
+      this.fragment = fragment;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.fragment) {
+      try {
+        document.querySelector("#" + this.fragment).scrollIntoView();
+      } catch (e) {}
+    } else {
+      try {
+        document.querySelector("#main").scrollIntoView();
+      } catch (e) {}
+    }
   }
 
   ngOnDestroy(): void {
-      this.routeSub.unsubscribe()
+    this.routeSub.unsubscribe();
   }
-
 
   submitComment() {
     this.comment.pid = this.pid;
@@ -85,7 +96,7 @@ export class PostComponent implements OnInit, OnDestroy {
     }
 
     this.db.addComment(this.pid, this.comment);
-    this.comment.content = '';
+    this.comment.content = "";
 
     this.replying = null;
   }
@@ -100,5 +111,4 @@ export class PostComponent implements OnInit, OnDestroy {
   like(qid: string) {
     this.db.toggleHeart(qid);
   }
-
 }

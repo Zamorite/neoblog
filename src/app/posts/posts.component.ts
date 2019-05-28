@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PostService } from '../core/services/posts.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,8 +9,9 @@ import { UtilService } from '../core/services/util.service';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.scss']
 })
-export class PostsComponent implements OnInit {
+export class PostsComponent implements OnInit, AfterViewInit {
 
+  fragment: string;
   posts: Observable<any>;
   tag: string;
 
@@ -46,6 +47,24 @@ export class PostsComponent implements OnInit {
       ).add(
         () => this.util.loaded()
       );  
+    }
+
+    this.route.fragment.subscribe(fragment => {
+      this.fragment = fragment;
+    });
+  }
+
+
+
+  ngAfterViewInit(): void {
+    if (this.fragment) {
+      try {
+        document.querySelector("#" + this.fragment).scrollIntoView();
+      } catch (e) {}
+    } else {
+      try {
+        document.querySelector("#header").scrollIntoView();
+      } catch (e) {}
     }
   }
 

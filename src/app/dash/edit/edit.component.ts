@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../core/services/notification.service';
 import { User } from '../../core/models/user.model';
 
@@ -10,14 +10,17 @@ import { User } from '../../core/models/user.model';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, AfterViewInit {
 
   constructor(
     public auth: AuthService,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     private notif: NotificationService
   ) { }
+
+  fragment: string;
 
   usr: User;
 
@@ -43,6 +46,24 @@ export class EditComponent implements OnInit {
         this.usr = u;
       }
     );
+
+    this.route.fragment.subscribe(fragment => {
+      this.fragment = fragment;
+    });
+  }
+
+
+
+  ngAfterViewInit(): void {
+    if (this.fragment) {
+      try {
+        document.querySelector("#" + this.fragment).scrollIntoView();
+      } catch (e) {}
+    } else {
+      try {
+        document.querySelector("#header").scrollIntoView();
+      } catch (e) {}
+    }
   }
 
 

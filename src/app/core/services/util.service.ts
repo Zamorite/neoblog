@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Injectable } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class UtilService {
   public loading = false;
@@ -10,9 +10,7 @@ export class UtilService {
   public header = true;
   public footer = true;
 
-  constructor(
-  private sanitizer: DomSanitizer
-) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
   randId() {
     const randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
@@ -33,7 +31,8 @@ export class UtilService {
   }
 
   loaded() {
-    this.loading = false;
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000);
   }
-
 }

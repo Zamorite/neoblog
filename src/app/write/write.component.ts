@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as firebase from 'firebase';
 import { Post } from '../core/models/post.model';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -6,13 +6,16 @@ import { PostService } from '../core/services/posts.service';
 import { NotificationService } from '../core/services/notification.service';
 import { FileUploadService } from '../core/services/file-upload.service';
 import { AuthService } from '../core/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-write',
   templateUrl: './write.component.html',
   styleUrls: ['./write.component.scss']
 })
-export class WriteComponent implements OnInit {
+export class WriteComponent implements OnInit, AfterViewInit {
+
+  fragment: string;
 
   pix: File;
   pixURL: any;
@@ -33,6 +36,7 @@ export class WriteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private ps: PostService,
+    private route: ActivatedRoute,
     public auth: AuthService,
     private notif: NotificationService,
     private fus: FileUploadService
@@ -50,6 +54,23 @@ export class WriteComponent implements OnInit {
 
 
   ngOnInit() {
+    this.route.fragment.subscribe(fragment => {
+      this.fragment = fragment;
+    });
+  }
+
+
+
+  ngAfterViewInit(): void {
+    if (this.fragment) {
+      try {
+        document.querySelector("#" + this.fragment).scrollIntoView();
+      } catch (e) {}
+    } else {
+      try {
+        document.querySelector("#header").scrollIntoView();
+      } catch (e) {}
+    }
   }
 
 

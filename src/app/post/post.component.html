@@ -1,6 +1,6 @@
 <app-flipper *ngIf="util.loading"></app-flipper>
 
-<div *ngIf="post$ | async as p; else notFound">
+<div id="main" *ngIf="post$ | async as p; else notFound">
     <!-- start page title section -->
     <section class="wow fadeIn cover-background background-position-top" [style.background-image]="util.sanitize(p.image)">
         <div class="opacity-medium bg-extra-dark-gray"></div>
@@ -51,13 +51,13 @@
                                         <span class="text-small">{{p.heartCount}}</span></a>
                                 </li>
                                 <li>
-                                    <a shareButton="whatsapp" [description]="'Check out this post by ' + p.author?.displayName + ' on NeoBlog\n\n'" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                    <a shareButton="whatsapp" [description]="'Check out this post by ' + p.author?.displayName + ' on BlgPrss\n\n'" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
                                 </li>
                                 <li>
-                                    <a shareButton="twitter" [description]="'Check out this post by ' + p.author?.displayName + ' on NeoBlog\n\n'" [tags]="p.tags" class="twitter"><i class="fab fa-twitter"></i></a>
+                                    <a shareButton="twitter" [description]="'Check out this post by ' + p.author?.displayName + ' on BlgPrss\n\n'" [tags]="p.tags" class="twitter"><i class="fab fa-twitter"></i></a>
                                 </li>
                                 <li>
-                                    <a shareButton="facebook" [title]="p.title" [description]="'Check out this post by ' + p.author?.displayName + ' on NeoBlog'" [image]="p.image" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                                    <a shareButton="facebook" [title]="p.title" [description]="'Check out this post by ' + p.author?.displayName + ' on BlgPrss'" [image]="p.image" class="facebook"><i class="fab fa-facebook-f"></i></a>
                                 </li>
                             </ul>
                         </div>

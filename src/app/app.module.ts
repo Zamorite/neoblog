@@ -44,6 +44,8 @@ import { SearchComponent } from './search/search.component';
 import { NgAisModule } from 'angular-instantsearch';
 import { LoaderComponent } from './loader/loader.component';
 import { FlipperComponent } from './flipper/flipper.component';
+import { AdsenseModule } from 'ng2-adsense';
+
 
 
 
@@ -93,7 +95,11 @@ import { FlipperComponent } from './flipper/flipper.component';
     ShareModule,
     HttpClientModule,
     LottieAnimationViewModule.forRoot(),
-    NgAisModule.forRoot()
+    NgAisModule.forRoot(),
+    AdsenseModule.forRoot({
+      adClient: 'ca-pub-7640562161899788',
+      adSlot: 7259870550,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

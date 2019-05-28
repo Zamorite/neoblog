@@ -38,6 +38,7 @@
     "express": "^4.15.2",
     "firebase": "^6.0.1",
     "ng-lottie": "^0.3.2",
+    "ng2-adsense": "^5.4.3",
     "ngx-quill": "^4.7.0",
     "node-sass": "^4.12.0",
     "quill": "^1.3.6",
