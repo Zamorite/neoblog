@@ -42,7 +42,8 @@ export class FileUploadService {
 
 
   async upload(file: File, callback?) {
-    // Create a root reference
+    if (file) {
+      // Create a root reference
     const storageRef = firebase.storage().ref();
 
     // Create a reference to 'mountains.jpg'
@@ -103,6 +104,9 @@ export class FileUploadService {
       )
       .catch(e => this.notif.logError(e));
     });
+    } else {
+      callback();
+    }
   }
 
 

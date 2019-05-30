@@ -6,6 +6,7 @@ export interface Post {
     createdAt?: Date;
     tags?: any[];
     image?: string;
+    draft?: boolean;
     heartCount: number;
     hearts?: any;
     field?: string;

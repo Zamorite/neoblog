@@ -1,171 +1,340 @@
 <!-- start page title section -->
-<section id="header" class="wow fadeIn cover-background background-position-top" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');">
-    <div class="opacity-medium bg-extra-dark-gray"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
-                <div class="display-table-cell vertical-align-middle text-center padding-30px-tb">
-                    <!-- start sub title -->
-                    <span class="display-block text-white opacity6 alt-font margin-5px-bottom">Feel free to express yourself</span>
-                    <!-- end sub title -->
-                    <!-- start page title -->
-                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">Compose Article</h1>
-                    <!-- end page title -->
-                </div>
-            </div>
+<section
+  id="header"
+  class="wow fadeIn cover-background background-position-top"
+  style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');"
+>
+  <div class="opacity-medium bg-extra-dark-gray"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
+        <div
+          class="display-table-cell vertical-align-middle text-center padding-30px-tb"
+        >
+          <!-- start sub title -->
+          <span
+            class="display-block text-white opacity6 alt-font margin-5px-bottom"
+            >Feel free to express yourself</span
+          >
+          <!-- end sub title -->
+          <!-- start page title -->
+          <h1 class="alt-font text-white font-weight-600 no-margin-bottom">
+            Compose Article
+          </h1>
+          <!-- end page title -->
         </div>
+      </div>
     </div>
+  </div>
 </section>
 <!-- end page title section -->
 
 <!-- start page content -->
 <section>
-    <div class="container">
-        <div class="row" *ngIf="auth.user | async as user">
+  <div class="container">
+    <div class="row" *ngIf="auth.user | async as user">
+      <form [formGroup]="postForm" (ngSubmit)="postArticle()">
+        <!-- start main section -->
+        <main class="col-md-9 right-sidebar">
+          <!-- start form input -->
+          <div class="col-md-12">
+            <input
+              formControlName="title"
+              [(ngModel)]="post.title"
+              name="title"
+              type="text"
+              placeholder="Heading *"
+              class="big-input bg-white"
+            />
 
-            <form [formGroup]="postForm" (ngSubmit)="postArticle()">
+            <small
+              class="text-danger"
+              *ngIf="
+                this.postForm.get('title').dirty &&
+                this.postForm.get('title').hasError('required')
+              "
+              >Article title please...</small
+            >
 
-                <!-- start main section -->
-                <main class="col-md-9 right-sidebar">
+            <small
+              class="text-danger"
+              *ngIf="
+                this.postForm.get('title').dirty &&
+                this.postForm.get('title').hasError('minlength')
+              "
+              >Title should have > 10 chars...</small
+            >
+          </div>
 
-                    <!-- start form input -->
-                    <div class="col-md-12">
-                        <input formControlName="title" [(ngModel)]="post.title" name="title" type="text" placeholder="Heading *" class="big-input bg-white">
+          <div class="col-md-12">
+            <quill-editor
+              [required]="true"
+              formControlName="content"
+              [style]="{ minHeight: '150px' }"
+              [modules]="{
+                toolbar: [
+                  ['bold', 'italic', 'underline', 'strike'],
+                  ['blockquote', 'code-block'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  [{ script: 'sub' }, { script: 'super' }],
+                  [{ indent: '-1' }, { indent: '+1' }],
+                  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                  [{ align: [] }],
+                  ['link', 'image', 'video']
+                ]
+              }"
+            ></quill-editor>
 
-                        <small class="text-danger" *ngIf="this.postForm.get('title').dirty && this.postForm.get('title').hasError('required')">Article title please...</small>
+            <small
+              class="text-danger"
+              *ngIf="
+                this.postForm.get('content').dirty &&
+                this.postForm.get('content').hasError('required')
+              "
+              >Article content please...</small
+            >
 
-                        <small class="text-danger" *ngIf="this.postForm.get('title').dirty && this.postForm.get('title').hasError('minlength')">Title should have > 10 chars...</small>
-                    </div>
+            <small
+              class="text-danger"
+              *ngIf="
+                this.postForm.get('content').dirty &&
+                this.postForm.get('content').hasError('minlength')
+              "
+              >Content should have about 250 words...</small
+            >
+          </div>
 
-                    <div class="col-md-12">
-                        <quill-editor [required]="true" formControlName="content" [style]="{minHeight: '150px'}" [modules]="{
-                          toolbar: [
-                          ['bold', 'italic', 'underline', 'strike'],
-                          ['blockquote', 'code-block'],
-                          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                          [{ 'script': 'sub'}, { 'script': 'super' }],
-                          [{ 'indent': '-1'}, { 'indent': '+1' }],
-                          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                          [{ 'align': [] }],
-                          ['link', 'image', 'video']
-                          ]
-                      }"></quill-editor>
+          <div class="col-md-12 hidden-xs hidden-sm text-center">
+            <button
+              class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr modal-popup"
+              [disabled]="postForm.invalid"
+              (click)="previewPost()"
+            >
+              Preview
+            </button>
+  
+            <button
+              class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr modal-popup"
+              [disabled]="!(post.title) || (post.title==='') || (post.title.length <= 10)"
+              (click)="saveDraft()"
+            >
+              Save Draft
+            </button>
+            <!-- <button class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr" type="submit">Post</button> -->
+          </div>
 
-                        <small class="text-danger" *ngIf="this.postForm.get('content').dirty && this.postForm.get('content').hasError('required')">Article content please...</small>
+          <div [ngClass]="{ 'mfp-hide': hide }">
+            <div class="mfp-bg mfp-ready"></div>
 
-                        <small class="text-danger" *ngIf="this.postForm.get('content').dirty && this.postForm.get('content').hasError('minlength')">Content should have about 250 words...</small>
-                    </div>
+            <div
+              class="mfp-wrap mfp-close-btn-in mfp-auto-cursor mfp-ready"
+              tabindex="-1"
+              style="overflow: hidden auto;"
+            >
+              <div class="mfp-container mfp-inline-holder">
+                <div class="mfp-content">
+                  <!-- start modal pop-up -->
+                  <div
+                    id="modal-popup"
+                    class="white-popup-block col-md-6 col-sm-7 col-xs-11 center-col bg-white modal-popup-main padding-50px-all margin-50px-tb"
+                  >
+                    <button
+                      title="Close (Esc)"
+                      type="button"
+                      (click)="hideModal()"
+                      class="mfp-close"
+                    >
+                      ×
+                    </button>
 
-                    <div class="col-md-12 text-center">
-                        <a class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr modal-popup" (click)="previewPost()">Preview</a>
-                        <!-- <button class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr" type="submit">Post</button> -->
-                    </div>
+                    <span
+                      class="text-extra-dark-gray text-uppercase alt-font text-extra-large font-weight-500 margin-15px-bottom display-block text-center"
+                      >Preview</span
+                    >
 
-                    <div [ngClass]="{'mfp-hide': hide}">
-                        <div class="mfp-bg mfp-ready"></div>
-
-                        <div class="mfp-wrap mfp-close-btn-in mfp-auto-cursor mfp-ready" tabindex="-1" style="overflow: hidden auto;">
-                            <div class="mfp-container mfp-inline-holder">
-                                <div class="mfp-content">
-
-                                    <!-- start modal pop-up -->
-                                    <div id="modal-popup" class="white-popup-block col-md-6 col-sm-7 col-xs-11 center-col bg-white modal-popup-main padding-50px-all margin-50px-tb">
-
-                                        <button title="Close (Esc)" type="button" (click)="hideModal()" class="mfp-close">×</button>
-
-                                        <span class="text-extra-dark-gray text-uppercase alt-font text-extra-large font-weight-500 margin-15px-bottom display-block text-center">Preview</span>
-
-                                        <!-- start page title section -->
-                                        <!-- wow fadeIn  -->
-                                        <section class="cover-background background-position-top" [style.background-image]="'url(' + pixURL +')'">
-                                            <div class="opacity-medium bg-extra-dark-gray"></div>
-                                            <div class="row">
-                                                <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
-                                                    <div class="display-table-cell vertical-align-middle text-center padding-30px-all">
-                                                        <!-- start sub title -->
-                                                        <span class="text-white opacity6 alt-font margin-10px-bottom display-block text-uppercase text-small">{{getDate() | moment}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;by <a href="blog-masonry.html" class="text-white">{{user.displayName}}</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="blog-masonry.html" class="text-white" *ngFor="let tag of post.tags">{{tag}} </a></span>
-                                                        <!-- end sub title -->
-                                                        <!-- start page title -->
-                                                        <h1 class="text-white alt-font font-weight-600 margin-10px-bottom">{{post.title}}</h1>
-                                                        <!-- end page title -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                        <!-- end page title section -->
-
-                                        <section class="text-large line-height-30 text-medium-gray text-justify xs-text-center xs-line-height-26">
-                                            <div [innerHTML]="post.text">
-
-                                            </div>
-                                        </section>
-
-
-                                        <div class="text-center">
-                                            <a class="btn btn-medium btn-rounded btn-dark-gray popup-modal-dismiss" (click)="postArticle()">Post</a>
-                                        </div>
-                                    </div>
-                                    <!-- end modal pop-up -->
-                                </div>
-                            </div>
+                    <!-- start page title section -->
+                    <!-- wow fadeIn  -->
+                    <section
+                      class="cover-background background-position-top"
+                      [style.background-image]="'url(' + pixURL + ')'"
+                    >
+                      <div class="opacity-medium bg-extra-dark-gray"></div>
+                      <div class="row">
+                        <div
+                          class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large"
+                        >
+                          <div
+                            class="display-table-cell vertical-align-middle text-center padding-30px-all"
+                          >
+                            <!-- start sub title -->
+                            <span
+                              class="text-white opacity6 alt-font margin-10px-bottom display-block text-uppercase text-small"
+                              >{{
+                                getDate() | moment
+                              }}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;by
+                              <a href="blog-masonry.html" class="text-white">{{
+                                user.displayName
+                              }}</a
+                              >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
+                                href="blog-masonry.html"
+                                class="text-white"
+                                *ngFor="let tag of post.tags"
+                                >{{ tag }}
+                              </a></span
+                            >
+                            <!-- end sub title -->
+                            <!-- start page title -->
+                            <h1
+                              class="text-white alt-font font-weight-600 margin-10px-bottom"
+                            >
+                              {{ post.title }}
+                            </h1>
+                            <!-- end page title -->
+                          </div>
                         </div>
+                      </div>
+                    </section>
+                    <!-- end page title section -->
+
+                    <section
+                      class="text-large line-height-30 text-medium-gray text-justify xs-text-center xs-line-height-26"
+                    >
+                      <div [innerHTML]="post.text"></div>
+                    </section>
+
+                    <div class="text-center">
+                      <a
+                        class="btn btn-medium btn-rounded btn-dark-gray popup-modal-dismiss"
+                        (click)="postArticle()"
+                        >Post</a
+                      >
                     </div>
+                  </div>
+                  <!-- end modal pop-up -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <!-- end main section -->
 
-                </main>
-                <!-- end main section -->
+        <!-- start side bar  -->
+        <aside class="col-md-3">
+          <div class="col-md-12">
+            <input
+              type="text"
+              [(ngModel)]="tags"
+              [ngModelOptions]="{ standalone: true }"
+              (change)="updateTags()"
+              placeholder="Tags *"
+              class="big-input bg-white"
+              name="tagField"
+            />
+          </div>
 
-                <!-- start side bar  -->
-                <aside class="col-md-3">
-                    <div class="col-md-12">
-                        <input type="text" [(ngModel)]="tags" [ngModelOptions]="{standalone: true}" (change)="updateTags()" placeholder="Tags *" class="big-input bg-white" name="tagField">
-                    </div>
+          <div class="col-md-12 margin-45px-bottom xs-margin-25px-bottom">
+            <div
+              class="text-extra-dark-gray margin-20px-bottom alt-font text-uppercase font-weight-600 text-small aside-title"
+            >
+              <span>Tags</span>
+            </div>
+            <ul class="list-style-6 margin-50px-bottom text-small">
+              <li *ngFor="let tag of post.tags">
+                <a href="blog-masonry.html">{{ tag }}</a>
+              </li>
+            </ul>
+            <div
+              class="text-center padding-30px-tb"
+              *ngIf="post.tags.length === 0"
+            >
+              No tags yet...
+            </div>
+          </div>
 
-                    <div class="col-md-12 margin-45px-bottom xs-margin-25px-bottom">
-                        <div class="text-extra-dark-gray margin-20px-bottom alt-font text-uppercase font-weight-600 text-small aside-title"><span>Tags</span></div>
-                        <ul class="list-style-6 margin-50px-bottom text-small">
-                            <li *ngFor="let tag of post.tags"><a href="blog-masonry.html">{{tag}}</a></li>
-                        </ul>
-                        <div class="text-center padding-30px-tb" *ngIf="post.tags.length === 0">
-                            No tags yet...
-                        </div>
-                    </div>
+          <div class="col-md-12 margin-45px-bottom xs-margin-25px-bottom">
+            <div
+              class="text-extra-dark-gray margin-20px-bottom alt-font text-uppercase font-weight-600 text-small aside-title"
+            >
+              <span>Cover Image</span>
+            </div>
 
+            <div
+              class="display-table width-100 height-100"
+              *ngIf="pix as p; else noPix"
+            >
+              <div
+                class="display-table-cell vertical-align-middle width-100 height-100 "
+              >
+                <img
+                  [src]="pixURL"
+                  id="pre"
+                  [alt]="p.name"
+                  [title]="p.name"
+                  class="width-100 "
+                />
+              </div>
+            </div>
 
-                    <div class="col-md-12 margin-45px-bottom xs-margin-25px-bottom">
-                        <div class="text-extra-dark-gray margin-20px-bottom alt-font text-uppercase font-weight-600 text-small aside-title"><span>Cover Image</span></div>
+            <ng-template #noPix>
+              <div
+                class="text-center padding-30px-tb text-warning"
+                *ngIf="pixErr as p; else noErr"
+              >
+                {{ p }}
+              </div>
+              <ng-template #noErr>
+                <div class="text-center padding-30px-tb">
+                  Select an image to preview...
+                </div>
+              </ng-template>
+            </ng-template>
 
-                        <div class="display-table width-100 height-100" *ngIf="pix as p; else noPix">
-                            <div class="display-table-cell vertical-align-middle width-100 height-100 ">
-                                <img [src]="pixURL" id="pre" [alt]="p.name" [title]="p.name" class="width-100 ">
-                            </div>
-                        </div>
+            <div>
+              <input
+                formControlName="coverImage"
+                name="pix"
+                type="file"
+                id="pix"
+                (change)="setPix($event)"
+                class="big-input bg-white"
+              />
 
-                        <ng-template #noPix>
-                            <div class="text-center padding-30px-tb text-warning" *ngIf="pixErr as p; else noErr">
-                                {{p}}
-                            </div>
-                            <ng-template #noErr>
-                                <div class="text-center padding-30px-tb">
-                                    Select an image to preview...
-                                </div>
-                            </ng-template>
-                        </ng-template>
+              <small
+                class="text-danger"
+                *ngIf="
+                  this.postForm.get('coverImage').dirty &&
+                  this.postForm.get('coverImage').hasError('required')
+                "
+                >No image selected...</small
+              >
+            </div>
+          </div>
+        </aside>
+        <!-- end side bar  -->
+        <div class="col-md-12 hidden-md hidden-lg text-center">
+          <button
+            class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr modal-popup"
+            [disabled]="postForm.invalid"
+            (click)="previewPost()"
+          >
+            Preview
+          </button>
 
-                        <div>
-                            <input formControlName="coverImage" name="pix" type="file" id="pix" (change)="setPix ($event)" class="big-input bg-white">
-
-                            <small class="text-danger" *ngIf="this.postForm.get('coverImage').dirty && this.postForm.get('coverImage').hasError('required')">No image selected...</small>
-                        </div>
-
-                    </div>
-
-                </aside>
-                <!-- end side bar  -->
-
-            </form>
-
+          <button
+            class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr modal-popup"
+            [disabled]="!(post.title) || (post.title==='') || (post.title.length <= 10)"
+            (click)="saveDraft()"
+          >
+            Save Draft
+          </button>
+          <!-- <button class="btn btn-transparent-dark-gray btn-large margin-20px-top margin-10px-lr" type="submit">Post</button> -->
         </div>
-
+      </form>
     </div>
+  </div>
 </section>
 <!-- end page content -->
+
+<div *ngIf="util.loading" class="height-100">
+  <app-loader></app-loader>
+</div>

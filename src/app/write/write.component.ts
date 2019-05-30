@@ -1,12 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import * as firebase from 'firebase';
 import { Post } from '../core/models/post.model';
 import { FormBuilder, Validators } from '@angular/forms';
 import { PostService } from '../core/services/posts.service';
 import { NotificationService } from '../core/services/notification.service';
 import { FileUploadService } from '../core/services/file-upload.service';
 import { AuthService } from '../core/services/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { UtilService } from '../core/services/util.service';
 
 @Component({
   selector: 'app-write',
@@ -35,8 +35,9 @@ export class WriteComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private ps: PostService,
+    private db: PostService,
     private route: ActivatedRoute,
+    public util: UtilService,
     public auth: AuthService,
     private notif: NotificationService,
     private fus: FileUploadService
@@ -54,11 +55,31 @@ export class WriteComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
+    this.util.load();
+
+    this.route.params.subscribe(
+      (qp: Params) => {
+        if (qp.draft) {
+          this.db.getDraftById(qp.draft).subscribe(
+            d => {
+              this.post.title = d.title;
+              this.post.text = d.text;
+              this.post.tags = d.tags;
+
+              this.post.image = d.image;
+              this.pixURL= d.image;
+            }
+          )
+        }
+      }
+    )
+
     this.route.fragment.subscribe(fragment => {
       this.fragment = fragment;
     });
-  }
 
+    this.util.loaded();
+  }
 
 
   ngAfterViewInit(): void {
@@ -97,17 +118,33 @@ export class WriteComponent implements OnInit, AfterViewInit {
   }
 
 
+  saveDraft() {
+    this.fus.upload(this.pix,
+      (photoURL = null) => {
+
+        this.post.text = this.postForm.get('content').value;
+        this.post.image = photoURL ? photoURL : null;
+        this.post.draft = true;
+
+        this.db.addDraft(this.post)
+        .then(
+          () => {
+            this.notif.success('Draft saved Successfully.');
+          })
+        .catch(e => this.notif.logError(e));
+      }
+    );
+  }
+
+
   postArticle() {
     this.fus.upload(this.pix,
       (photoURL) => {
 
-        console.log('hello ' + photoURL);
-
-
         this.post.text = this.postForm.get('content').value;
         this.post.image = photoURL;
 
-        this.ps.addPost(this.post)
+        this.db.addPost(this.post)
         .then(
           () => {
             this.notif.success('Article Posted Successfully.');

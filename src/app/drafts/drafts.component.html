@@ -1,0 +1,96 @@
+<!-- start page title section -->
+<section
+  id="header"
+  class="wow fadeIn cover-background background-position-top z-head"
+  style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');"
+>
+  <div class="opacity-medium bg-extra-dark-gray"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
+        <div
+          class="display-table-cell vertical-align-middle text-center padding-30px-tb"
+        >
+          <!-- start sub title -->
+          <span
+            class="display-block text-white opacity6 alt-font margin-5px-bottom"
+            >Unpublished Articles visible to you and only you</span
+          >
+          <!-- end sub title -->
+          <!-- start page title -->
+          <h1 class="alt-font text-white font-weight-600 no-margin-bottom">
+            Drafts
+          </h1>
+          <!-- end page title -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end page title section -->
+
+<div class="container">
+  <div
+    class="row equalize xs-equalize-auto padding-80px-top sm-padding-50px-top xs-padding-30px-top"
+  >
+    <!-- start post items -->
+    <div *ngFor="let draft of drafts | async"
+        class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom"
+      >
+        <div class="blog-post blog-post-style2">
+          <div
+            class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom"
+          >
+            <a
+              [routerLink]="['/', 'write', draft.id]"
+              routerLinkActive="router-link-active"
+            >
+              <img
+                class="width-100 height-150px"
+                src="{{draft.image ||  '`blog_anyj.svg'}}"
+                alt="Pofo"
+              />
+            </a>
+          </div>
+          <div class="post-details">
+            <a
+              [routerLink]="['/', 'post', draft.id]"
+              routerLinkActive="router-link-active"
+              class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100"
+              >{{ draft.title }}</a
+            >
+            <div
+              class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"
+            ></div>
+            <div class="author">
+              <span
+                class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block"
+                >{{
+                  draft.createdAt | fireDate | moment
+                }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- end post items -->
+
+    <div *ngIf="(drafts | async)?.length == 0">
+      <div class="col-xs-6 col-md-3 center-col margin-25px-tb">
+        <img
+          src="../../assets/images/svg/undraw_done_a34v.svg"
+          alt="not found!"
+        />
+      </div>
+      <h4 class="text-center">Nice & Clean!</h4>
+      <p class="text-center text-medium padding-25px-all">
+        You don't seem to have any drafts. <br />
+        Posts that you save as drafts appear here.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="util.loading" class="height-100">
+  <app-loader></app-loader>
+</div>

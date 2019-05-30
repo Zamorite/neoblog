@@ -11,12 +11,14 @@ import { EditComponent } from './dash/edit/edit.component';
 import { NotFoundComponent } from './except/not-found/not-found.component';
 import { WriteComponent } from './write/write.component';
 import { PortComponent } from './port/port.component';
+import { DraftsComponent } from './drafts/drafts.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
   {path: 'auth', component: AuthComponent},
   {path: 'write', component: WriteComponent},
+  {path: 'write/:draft', component: WriteComponent},
   {path: 'dashboard', canActivate: [AuthGuard], children:
   [
     {path: '', component: ProfileComponent},
@@ -24,6 +26,7 @@ const routes: Routes = [
   ]
   },
   {path: 'posts', component: PostsComponent},
+  {path: 'drafts', component: DraftsComponent},
   {path: 'port/:author', component: PortComponent},
   {path: 'post/:id', component: PostComponent},
   {path: '**', component: NotFoundComponent, pathMatch: 'full'},

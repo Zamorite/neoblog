@@ -1,58 +1,82 @@
 <div *ngIf="util.loading" class="height-100">
-    <app-loader></app-loader>
+  <app-loader></app-loader>
 </div>
-
-
-<div *ngIf="(posts | async)?.length == 0" class="height-100">
-    <div class="mx-auto">
-        <h4 class="text-center">Oops!</h4>
-        <p class="text-center">We could not find any posts in this category.</p>
-    </div>
-</div>
-
-
-
-
 
 <!-- start page title section -->
-<section class="wow fadeIn cover-background background-position-top z-head" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');">
-    <div class="opacity-medium bg-extra-dark-gray"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
-                <div class="display-table-cell vertical-align-middle text-center padding-30px-tb">
-                    <!-- start sub title -->
-                    <span class="display-block text-white opacity6 alt-font margin-5px-bottom">Explore articles from author</span>
-                    <!-- end sub title -->
-                    <!-- start page title -->
-                    <h1 class="alt-font text-white font-weight-600 no-margin-bottom">Articles</h1>
-                    <!-- end page title -->
-                </div>
-            </div>
+<section
+  id="header"
+  class="wow fadeIn cover-background background-position-top z-head"
+  style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fabout-banner.jpg?alt=media&token=7cbaf958-2397-4209-975a-26e95481aa57');"
+>
+  <div class="opacity-medium bg-extra-dark-gray"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-large">
+        <div
+          class="display-table-cell vertical-align-middle text-center padding-30px-tb"
+        >
+          <!-- start sub title -->
+          <span
+            class="display-block text-white opacity6 alt-font margin-5px-bottom"
+            >Explore articles from author</span
+          >
+          <!-- end sub title -->
+          <!-- start page title -->
+          <h1 class="alt-font text-white font-weight-600 no-margin-bottom">
+            Articles
+          </h1>
+          <!-- end page title -->
         </div>
+      </div>
     </div>
+  </div>
 </section>
 <!-- end page title section -->
-    
+
 <div class="container">
-    <div class="row">
-        <div *ngFor="let p of posts | async" class="col-md-4 col-sm-4 col-xs-12 padding-10px-all grid-item feature-box-4 wow slideInDown">
-        <div class="position-relative overflow-hidden height-300px">
-            <figure>
-                <img class="overflow-hidden height-300px" [src]="p.image" alt="" >
-                <div class="opacity-medium bg-extra-dark-gray"></div>
-                <figcaption>
-                    <span class="text-medium-gray margin-10px-bottom display-inline-block ">
-                        <ng-container *ngFor="let t of p.tags; let idx = index">
-                            {{t}}{{(p.tags.length - 1) !== idx ? ' | ' : ''}}
-                        </ng-container>
-                    </span>
-                    <div class="bg-deep-pink separator-line-horrizontal-full display-inline-block margin-10px-bottom"></div>
-                    <span class="text-extra-large display-block text-white alt-font margin-25px-bottom width-60 md-width-100 sm-width-100 sm-margin-seven-bottom xs-width-100">{{p.title}}</span>
-                    <a [routerLink]="[ '/', 'post', p.id ]" class="btn btn-very-small btn-white font-weight-300">Check it out!</a>
-                </figcaption>
-            </figure>
-        </div>
+  <!-- start post content section -->
+  <div class="row blog-post-style4">
+    <div class="col-md-12 no-padding margin-25px-tb xs-padding-15px-lr">
+      <ul class="blog-grid blog-3col gutter-large">
+        <!-- <li class="grid-sizer"></li> -->
+        <!-- start post item -->
+        <li *ngFor="let p of posts | async" class="grid-item">
+          <figure>
+            <div class="blog-img bg-extra-dark-gray">
+              <a [routerLink]="['/', 'post', p.id]"
+                ><img
+                  class="overflow-hidden height-300px"
+                  [src]="p.image"
+                  [alt]="p.title"
+              /></a>
+            </div>
+            <figcaption>
+              <div class="portfolio-hover-main text-left">
+                <div class="blog-hover-box vertical-align-bottom">
+                  <span
+                    class="post-author text-extra-small text-medium-gray text-uppercase display-block margin-5px-bottom xs-margin-5px-bottom"
+                    >{{ p.createdAt | fireDate | moment }}</span
+                  >
+                  <h6
+                    class="alt-font display-block text-white font-weight-500 no-margin-bottom"
+                  >
+                    <a [routerLink]="['/', 'post', p.id]" class="text-white">{{
+                      p.title
+                    }}</a>
+                  </h6>
+                  <p class="text-medium-gray margin-10px-top blog-hover-text">
+                    <ng-container *ngFor="let t of p.tags; let idx = index">
+                      <a [routerLink]="['/', 'posts', { tag: t }]">{{ t }}</a
+                      >{{ p.tags.length - 1 !== idx ? " | " : "" }}
+                    </ng-container>
+                  </p>
+                </div>
+              </div>
+            </figcaption>
+          </figure>
+        </li>
+        <!-- end post item -->
+      </ul>
     </div>
-    </div>
+  </div>
 </div>

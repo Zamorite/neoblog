@@ -45,6 +45,7 @@ import { NgAisModule } from 'angular-instantsearch';
 import { LoaderComponent } from './loader/loader.component';
 import { FlipperComponent } from './flipper/flipper.component';
 import { AdsenseModule } from 'ng2-adsense';
+import { DraftsComponent } from './drafts/drafts.component';
 
 
 
@@ -79,6 +80,7 @@ import { AdsenseModule } from 'ng2-adsense';
     SearchComponent,
     LoaderComponent,
     FlipperComponent,
+    DraftsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

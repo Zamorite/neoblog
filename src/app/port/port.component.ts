@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 import { Observable } from 'rxjs'
 import { UtilService } from '../core/services/util.service';
@@ -11,7 +11,7 @@ import { PostService } from '../core/services/posts.service';
   templateUrl: './port.component.html',
   styleUrls: ['./port.component.scss']
 })
-export class PortComponent implements OnInit {
+export class PortComponent implements OnInit, AfterViewInit {
 
   posts: Observable<Post[]>;
 
@@ -36,11 +36,10 @@ export class PortComponent implements OnInit {
     );
   }
 
-  // ngOnDestroy(): void {
-  //   this.util.setBoards({
-  //     header: true,
-  //     footer: true,
-  //   });
-  // }
+  ngAfterViewInit(): void {
+    try {
+      document.querySelector("#header").scrollIntoView();
+    } catch (e) {}
+  }
 
 }
