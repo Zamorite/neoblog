@@ -1,66 +1,228 @@
-<ng-container *ngIf="auth.user | async as user; else noAuth">
-    <section class="wow fadeIn animated" data-stellar-background-ratio="0.5" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fdark-bg.jpg?alt=media&token=03ae1672-ebb7-48f0-a271-4821805f287e')">
-        <div class=" container ">
-            <div class="row text-white padding-five-bottom">
-                <div class="col-md-12 col-sm-12 col-xs-12 display-table page-title-medium">
-                    <div class="display-table-cell vertical-align-middle text-center">
-                        <!-- start page title -->
-                        <h1 class="alt-font font-weight-500 no-margin">Profile</h1>
-                        <!-- end page title -->
-                        <!-- start sub title -->
-                        <span class="display-block margin-10px-top alt-font">What we presently know about {{user.displayName}}</span>
-                        <!-- end sub title -->
-                    </div>
-                </div>
-            </div>
-            <div class="row equalize sm-equalize-auto ">
-                <div class="col-md-5 col-sm-12 col-xs-12 text-center sm-margin-30px-bottom wow fadeInLeft ">
-                    <div class="display-table width-100 height-100 ">
-                        <div class="display-table-cell vertical-align-middle width-100 height-100 ">
-                            <img src="{{user.photoURL | avatar}}" [alt]="user.displayName " class="border-radius-6 width-100 ">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-7 col-sm-12 col-xs-12 wow fadeInRight " data-wow-delay="0.2s ">
-                    <div class="display-table width-100 height-100 ">
-                        <div class="display-table-cell vertical-align-middle padding-twelve-lr sm-text-center sm-no-padding width-100 text-white">
-                            <ul class="list-style-9 margin-twelve-left ">
-                                <li class="text-uppercase"><span class="display-block text-extra-small">
-                                  <i></i>Name</span>{{user.displayName}}</li>
-                                <li class="text-uppercase"><span class="display-block text-extra-small">
-                                  <i></i>Email</span>{{user.email}}</li>
-                                <li class="text-uppercase">
-                                    <span class="display-block text-extra-small">
-                                      <i></i>Field</span>
-                                    <ng-container *ngIf="user.field else noField">
-                                        {{user.field}}
-                                    </ng-container>
-                                    <ng-template #noField>
-                                        <a [routerLink]="['/', 'dashboard', 'edit']" routerLinkActive="router-link-active" class="text-white"><i class="icon-pencil"></i> Specify your field</a>
-                                    </ng-template>
-                                </li>
-                                <li class="text-uppercase">
-                                    <span class="display-block text-extra-small">
-                                      <i></i>School</span>
-                                    <ng-container *ngIf="user.school else noSchool">
-                                        {{user.school}}
-                                    </ng-container>
-                                    <ng-template #noSchool>
-                                        <a [routerLink]="['/', 'dashboard', 'edit']" routerLinkActive="router-link-active" class="text-white"><i class="icon-pencil"></i> Specify your school</a>
-                                    </ng-template>
-                                </li>
-                                <li>
-                                    <a [routerLink]="['/', 'dashboard', 'edit']" routerLinkActive="router-link-active" class="btn btn-small btn-deep-pink margin-30px-top xs-margin-three-top">Edit Profile</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div *ngIf="util.loading" class="height-100">
+  <app-loader></app-loader>
+</div>
+
+<ng-container *ngIf="user$ | async as user; else noAuth">
+  <section
+    class="wow fadeIn animated"
+    data-stellar-background-ratio="0.5"
+    style="background-image:url('https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Fdark-bg.jpg?alt=media&token=03ae1672-ebb7-48f0-a271-4821805f287e')"
+  >
+    <div class=" container ">
+      <div class="row text-white padding-five-bottom">
+        <div
+          class="col-md-12 col-sm-12 col-xs-12 display-table page-title-medium"
+        >
+          <div class="display-table-cell vertical-align-middle text-center">
+            <!-- start page title -->
+            <h1 class="alt-font font-weight-500 no-margin">Profile</h1>
+            <!-- end page title -->
+            <!-- start sub title -->
+            <span class="display-block margin-10px-top alt-font"
+              >What we presently know about {{ user.displayName }}</span
+            >
+            <!-- end sub title -->
+          </div>
         </div>
-    </section>
+      </div>
+      <div class="row equalize sm-equalize-auto ">
+        <div
+          class="col-md-5 col-sm-12 col-xs-12 text-center sm-margin-30px-bottom wow fadeInLeft "
+        >
+          <div class="display-table width-100 height-100 ">
+            <div
+              class="display-table-cell vertical-align-middle width-100 height-100 "
+            >
+              <img
+                src="{{ user.photoURL | avatar }}"
+                [alt]="user.displayName"
+                class="border-radius-6 width-100 "
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-md-7 col-sm-12 col-xs-12 wow fadeInRight "
+          data-wow-delay="0.2s "
+        >
+          <div class="display-table width-100 height-100 ">
+            <div
+              class="display-table-cell vertical-align-middle padding-twelve-lr sm-text-center sm-no-padding width-100 text-white"
+            >
+              <ul class="list-style-9 margin-twelve-left ">
+                <li class="text-uppercase">
+                  <span class="display-block text-extra-small">
+                    <i></i>Name</span
+                  >{{ user.displayName }}
+                </li>
+                <li class="text-uppercase">
+                  <span class="display-block text-extra-small">
+                    <i></i>Email</span
+                  >{{ user.email }}
+                </li>
+                <li
+                  *ngIf="user.about || (auth.user | async)?.uid == user.uid"
+                  class="text-uppercase"
+                >
+                  <span class="display-block text-extra-small">
+                    <i></i>About</span
+                  >
+                  <ng-container *ngIf="user.about; else noAbout">
+                    {{ user.about }}
+                  </ng-container>
+                  <ng-template #noAbout>
+                    <a
+                      [routerLink]="['/', 'dashboard', 'edit']"
+                      routerLinkActive="router-link-active"
+                      class="text-white"
+                      ><i class="icon-pencil"></i> Describe yourself in a few
+                      words...</a
+                    >
+                  </ng-template>
+                </li>
+                <li
+                  *ngIf="user.field || (auth.user | async)?.uid == user.uid"
+                  class="text-uppercase"
+                >
+                  <span class="display-block text-extra-small">
+                    <i></i>Field</span
+                  >
+                  <ng-container *ngIf="user.field; else noField">
+                    {{ user.field }}
+                  </ng-container>
+                  <ng-template #noField>
+                    <a
+                      [routerLink]="['/', 'dashboard', 'edit']"
+                      routerLinkActive="router-link-active"
+                      class="text-white"
+                      ><i class="icon-pencil"></i> Specify your field</a
+                    >
+                  </ng-template>
+                </li>
+                <li
+                  *ngIf="user.school || (auth.user | async)?.uid == user.uid"
+                  class="text-uppercase"
+                >
+                  <span class="display-block text-extra-small">
+                    <i></i>School</span
+                  >
+                  <ng-container *ngIf="user.school; else noSchool">
+                    {{ user.school }}
+                  </ng-container>
+                  <ng-template #noSchool>
+                    <a
+                      [routerLink]="['/', 'dashboard', 'edit']"
+                      routerLinkActive="router-link-active"
+                      class="text-white"
+                      ><i class="icon-pencil"></i> Specify your school</a
+                    >
+                  </ng-template>
+                </li>
+                <li *ngIf="(auth.user | async)?.uid === user.uid">
+                  <a
+                    [routerLink]="['/', 'dashboard', 'edit']"
+                    routerLinkActive="router-link-active"
+                    class="btn btn-small btn-deep-pink margin-30px-top xs-margin-three-top"
+                    >Edit Profile</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- start page title section -->
+  <section *ngIf="posts | async" class="bg-light-gray">
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-md-12 col-sm-12 col-xs-12 display-table page-title-medium"
+        >
+          <div class="display-table-cell vertical-align-middle text-center">
+            <!-- start page title -->
+            <h1 class="alt-font text-extra-dark-gray font-weight-500 no-margin">
+              Articles
+            </h1>
+            <!-- end page title -->
+            <!-- start sub title -->
+            <span class="display-block margin-10px-top alt-font"
+              >Explore articles written by {{ user.displayName }}</span
+            >
+            <!-- end sub title -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end page title section -->
+
+  <div class="container">
+    <!-- start post content section -->
+    <div class="row blog-post-style4">
+      <div class="col-md-12 no-padding margin-25px-tb xs-padding-15px-lr">
+        <ul class="blog-grid blog-3col gutter-large">
+          <!-- <li class="grid-sizer"></li> -->
+          <!-- start post item -->
+          <li *ngFor="let p of posts | async" class="grid-item">
+            <figure>
+              <div class="blog-img bg-extra-dark-gray">
+                <a [routerLink]="['/', 'post', p.id]"
+                  ><img
+                    class="overflow-hidden height-300px"
+                    [src]="p.image"
+                    [alt]="p.title"
+                /></a>
+              </div>
+              <figcaption>
+                <div class="portfolio-hover-main text-left">
+                  <div class="blog-hover-box vertical-align-bottom">
+                    <span
+                      class="post-author text-extra-small text-medium-gray text-uppercase display-block margin-5px-bottom xs-margin-5px-bottom"
+                      >{{ p.createdAt | fireDate | moment }}</span
+                    >
+                    <h6
+                      class="alt-font display-block text-white font-weight-500 no-margin-bottom"
+                    >
+                      <a
+                        [routerLink]="['/', 'post', p.id]"
+                        class="text-white"
+                        >{{ p.title }}</a
+                      >
+                    </h6>
+                    <p class="text-medium-gray margin-10px-top blog-hover-text">
+                      <ng-container *ngFor="let t of p.tags; let idx = index">
+                        <a [routerLink]="['/', 'posts', { tag: t }]">{{ t }}</a
+                        >{{ p.tags.length - 1 !== idx ? " | " : "" }}
+                      </ng-container>
+                    </p>
+                  </div>
+                </div>
+              </figcaption>
+            </figure>
+          </li>
+          <!-- end post item -->
+
+          <div *ngIf="(posts | async)?.length == 0">
+            <div class="col-xs-6 col-md-3 center-col margin-25px-tb">
+              <img
+                src="../../assets/images/svg/undraw_empty_xct9.svg"
+                alt="not found!"
+              />
+            </div>
+            <h4 class="text-center">Oops!</h4>
+            <p class="text-center text-medium padding-25px-all">
+              {{ user.displayName }} does not seem to have written any articles
+              yet. <br />
+              Please check back later.
+            </p>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </div>
 </ng-container>
 
-<ng-template #noAuth>
-
-</ng-template>
+<ng-template #noAuth> </ng-template>

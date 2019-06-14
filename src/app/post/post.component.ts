@@ -49,17 +49,34 @@ export class PostComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.post$
         .subscribe(post => {
-          this.seo_title.setTitle("");
-          this.seo_meta.addTags([
-            { name: "twitter:card", content: "summary" },
-            { name: "og:url", content: `/post/${post.id}` },
-            { name: "og:title", content: post.title },
-            {
-              name: "og:description",
-              content: "Check out this wonderful post on BlgPrss!"
-            },
-            { name: "og:image", content: post.image }
-          ]);
+          this.seo_title.setTitle(`${post.title} - BlgPrss`);
+          this.seo_meta.updateTag({ name: "twitter:card", content: "summary" });
+          this.seo_meta.updateTag({
+            name: "og:url",
+            content: `https://blgprss.com/post/${post.id}`
+          });
+          this.seo_meta.updateTag({ name: "og:title", content: post.title });
+          this.seo_meta.updateTag({
+            name: "og:description",
+            content: `Check out this wonderful post by ${post.author.displayName} on BlgPrss!`
+          });
+          this.seo_meta.updateTag({ name: "og:image", content: post.image });
+          this.seo_meta.updateTag({
+            name: "twitter:url",
+            content: `https://blgprss.com/post/${post.id}`
+          });
+          this.seo_meta.updateTag({ name: "twitter:title", content: post.title });
+          this.seo_meta.updateTag({
+            name: "twitter:description",
+            content: `Check out this wonderful post by ${post.author.displayName} on BlgPrss!`
+          });
+          this.seo_meta.updateTag({ name: "twitter:image", content: post.image });
+          this.seo_meta.updateTag({ name: "twitter:image:src", content: post.image });
+          // this.seo_meta.addTags([
+          //   ,
+          //   ,
+
+          // ]);
 
           this.util.loaded();
         })

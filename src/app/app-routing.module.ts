@@ -19,9 +19,10 @@ const routes: Routes = [
   {path: 'auth', component: AuthComponent},
   {path: 'write', component: WriteComponent},
   {path: 'write/:draft', component: WriteComponent},
-  {path: 'dashboard', canActivate: [AuthGuard], children:
+  {path: 'profile', canActivate: [AuthGuard], children:
   [
     {path: '', component: ProfileComponent},
+    {path: ':uid', component: ProfileComponent},
     {path: 'edit', component: EditComponent},
   ]
   },

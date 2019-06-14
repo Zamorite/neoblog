@@ -34,6 +34,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       displayName: ['', Validators.required],
       email: ['', Validators.compose([Validators.pattern(this.emailRegExp), Validators.required])],
       field: ['', Validators.required],
+      about: ['', Validators.compose([Validators.required, Validators.minLength(20)])],
       school: ['', Validators.required]
     }
   );

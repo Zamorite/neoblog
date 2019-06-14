@@ -34,45 +34,55 @@
     class="row equalize xs-equalize-auto padding-80px-top sm-padding-50px-top xs-padding-30px-top"
   >
     <!-- start post items -->
-    <div *ngFor="let draft of drafts | async"
-        class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom"
-      >
-        <div class="blog-post blog-post-style2">
-          <div
-            class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom"
+    <div
+      *ngFor="let draft of drafts | async"
+      class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin-80px-bottom sm-margin-50px-bottom xs-margin-30px-bottom"
+    >
+      <div class="blog-post blog-post-style2">
+        <div
+          class="blog-post-images overflow-hidden margin-25px-bottom xs-margin-15px-bottom"
+        >
+          <a
+            [routerLink]="['/', 'write', draft.id]"
+            routerLinkActive="router-link-active"
           >
-            <a
-              [routerLink]="['/', 'write', draft.id]"
-              routerLinkActive="router-link-active"
+            <img
+              class="width-100 height-150px"
+              src="{{
+                draft.image ||
+                  '../../../../assets/images/svg/undraw_blog_anyj.svg'
+              }}"
+              alt="Pofo"
+            />
+          </a>
+        </div>
+        <div class="post-details">
+          <a
+            [routerLink]="['/', 'write', draft.id]"
+            routerLinkActive="router-link-active"
+            class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100"
+            >{{ draft.title }}</a
+          >
+          <div
+            class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"
+          ></div>
+          <div class="author">
+            <span
+              class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block"
+              >{{ draft.createdAt | fireDate | moment }}</span
             >
-              <img
-                class="width-100 height-150px"
-                src="{{draft.image ||  '`blog_anyj.svg'}}"
-                alt="Pofo"
-              />
-            </a>
-          </div>
-          <div class="post-details">
-            <a
-              [routerLink]="['/', 'post', draft.id]"
-              routerLinkActive="router-link-active"
-              class="post-title text-medium text-extra-dark-gray width-90 display-block md-width-100"
-              >{{ draft.title }}</a
-            >
-            <div
-              class="separator-line-horrizontal-full bg-medium-light-gray margin-20px-tb xs-margin-15px-tb"
-            ></div>
-            <div class="author">
-              <span
-                class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block"
-                >{{
-                  draft.createdAt | fireDate | moment
-                }}</span
-              >
-            </div>
+            <span class="float-right text-large" title="Delete Draft"
+            ><a (click)="db.deleteDraft(draft.id)"
+            ><i class="ti ti-trash"></i></a
+            ></span>
+            <span class="float-right text-large" title="Continue Editing"
+              ><a [routerLink]="['/', 'write', draft.id]"
+                ><i class="ti ti-pencil"></i></a
+            ></span>
           </div>
         </div>
       </div>
+    </div>
     <!-- end post items -->
 
     <div *ngIf="(drafts | async)?.length == 0">

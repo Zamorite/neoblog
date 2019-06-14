@@ -76,7 +76,7 @@
             <span
               class="text-medium-gray text-uppercase text-extra-small padding-15px-left display-inline-block"
               >by
-              <a href="home-blog-grid.html" class="text-medium-gray">{{
+              <a [routerLink]="[ '/', 'profile', author.uid ]" class="text-medium-gray">{{
                 author.displayName
               }}</a
               >&nbsp;&nbsp;|&nbsp;&nbsp;{{

@@ -6,6 +6,7 @@ export interface User {
   photoURL?: string;
   displayName?: string;
   school?: string;
+  about?: string;
   field?: string;
   posted?: number;
   liked?: string[];

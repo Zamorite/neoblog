@@ -54,6 +54,12 @@
                                         <input formControlName="field" [(ngModel)]="usr.field" type="text" name="field" id="name" placeholder="Field*" class="input-border-bottom">
 
                                         <small class="text-danger" *ngIf="this.profile.get('field').dirty && this.profile.get('field').hasError('required')">Science, art or commercial...</small>
+                                        
+                                        <input formControlName="about" [(ngModel)]="usr.about" type="text" name="about" id="name" placeholder="About*" class="input-border-bottom">
+
+                                        <small class="text-danger" *ngIf="this.profile.get('about').dirty && this.profile.get('about').hasError('required')">Describe yourself...</small>
+
+                                        <small class="text-danger" *ngIf="this.profile.get('about').dirty && this.profile.get('about').hasError('minlength')">C'mon, write more...</small>
 
                                         <input formControlName="school" [(ngModel)]="usr.school" type="text" name="school" id="name" placeholder="School*" class="input-border-bottom">
 

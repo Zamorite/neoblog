@@ -36,6 +36,11 @@ export class PostService {
     });
   }
 
+  getUser(uid: string): Observable<User> {
+    const user$ = this.afs.doc(`users/${uid}`);
+    return user$ ? user$.valueChanges() : of(null);
+  }
+
   getDrafts(): Observable<any> {
     // don't forget to add index for the query beneath... 👍 DONE!
 
@@ -245,7 +250,7 @@ export class PostService {
   */
 
   addDraft(draft: Post) {
-    draft.id = this.afs.createId();
+    draft.id = draft.id ? draft.id : this.afs.createId();
     draft.createdAt = new Date();
     draft.author = this.uid;
 

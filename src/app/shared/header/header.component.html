@@ -7,7 +7,7 @@
       <div class="row">
         <!-- start logo -->
         <div class="col-md-2 col-xs-5">
-          <a href="index-2.html" title="Pofo" class="logo"
+          <a [routerLink]="[ '/' ]" title="Pofo" class="logo"
             ><img
               src="https://firebasestorage.googleapis.com/v0/b/n3obl0g.appspot.com/o/assets%2Flogo-white.png?alt=media&token=69ff8547-3e77-43e1-942f-b02c8b135fd4"
               data-rjs="../../../assets/images/logo@2x.png"
@@ -83,7 +83,7 @@
                     <li class="dropdown">
                       <a
                         ref="#profile"
-                        [routerLink]="['/', 'dashboard']"
+                        [routerLink]="['/', 'profile']"
                         routerLinkActive="router-link-active"
                         title="Profile"
                         >Profile</a

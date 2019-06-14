@@ -92,6 +92,7 @@
                       p.author?.displayName +
                       ' on BlgPrss'
                     "
+                    [url]="'blgprss.com/post/' + p.id"
                     class="whatsapp"
                     ><i class="fab fa-whatsapp"></i
                   ></a>
@@ -105,6 +106,7 @@
                       ' on BlgPrss\n\n'
                     "
                     [tags]="p.tags"
+                    [url]="'blgprss.com/post/' + p.id"
                     class="twitter"
                     ><i class="fab fa-twitter"></i
                   ></a>
@@ -119,6 +121,7 @@
                       ' on BlgPrss'
                     "
                     [image]="p.image"
+                    [url]="'blgprss.com/post/' + p.id"
                     class="facebook"
                     ><i class="fab fa-facebook-f"></i
                   ></a>
@@ -138,7 +141,7 @@
             <div
               class="display-table-cell width-130px text-center vertical-align-top xs-margin-15px-bottom xs-width-100 xs-display-block xs-text-center"
             >
-              <img [src]="author.photoURL | avatar" alt="" />
+              <img [src]="author.photoURL | avatar" [alt]="author.displayName" />
             </div>
             <div
               class="padding-40px-left display-table-cell vertical-align-top last-paragraph-no-margin xs-no-padding-left xs-display-block xs-text-center"
@@ -149,15 +152,11 @@
                 >{{ author.displayName }}</a
               >
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries.
+                {{ author.about }}
               </p>
               <a
                 *ngIf="p.author"
-                [routerLink]="['/', 'port', author.uid]"
+                [routerLink]="['/', 'profile', author.uid]"
                 class="btn btn-very-small btn-black margin-20px-top"
                 >All author posts</a
               >
