@@ -35,7 +35,7 @@
     "angular2-notifications": "^2.0.0",
     "core-js": "^2.5.4",
     "enhanced-resolve": "^4.1.0",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "firebase": "^6.0.1",
     "ng-lottie": "^0.3.2",
     "ng2-adsense": "^5.4.3",
